@@ -59,6 +59,7 @@ namespace RMS_Assistant
                     FileManager.ReadFile(allArgs[1]);
                 }
             }
+            UpdateDarkMode(true);
 
         }
 
