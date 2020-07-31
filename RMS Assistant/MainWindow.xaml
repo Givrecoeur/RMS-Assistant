@@ -205,7 +205,7 @@
                     <ColumnDefinition Width="0*" MinWidth="0"/>
                     <ColumnDefinition Width="1*" MinWidth="220"/>
                 </Grid.ColumnDefinitions>
-                <CheckBox x:Name="IsDarkMode" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10" IsChecked="True" Checked="IsDarkMode_Checked" Unchecked="IsDarkMode_Unchecked">DM</CheckBox>
+                <!-- <CheckBox x:Name="IsDarkMode" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10" IsChecked="True" Checked="IsDarkMode_Checked" Unchecked="IsDarkMode_Unchecked">DM</CheckBox> -->
                 <StackPanel Grid.Column="1" Orientation="Vertical">
                     <ProgressBar x:Name="ProgressBar" Visibility="Hidden" Minimum="0" Maximum="100"/>
                     <Label x:Name="ProgressStatus" Visibility="Hidden"/>

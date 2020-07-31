@@ -567,8 +567,6 @@ namespace RMS_Assistant
         private void IsDarkMode_Unchecked(object sender, RoutedEventArgs e)
         {
             UpdateDarkMode(false);
-            RMSProperty test = new RMSProperty("ai_info_map_type", Root.Children[0], this);
-            Root.Children[0].Children.Add(test);
         }
 
         public void UpdateProgress(int progress, string message)
