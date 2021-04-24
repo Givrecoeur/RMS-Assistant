@@ -19,7 +19,7 @@ namespace RMS_Assistant
             }
         }
 
-        public override Dictionary<string, int[]> DictNameAttributesConfigs
+        public override Dictionary<string, int> DictNameNbAttributes
         {
             get
             {
@@ -33,7 +33,7 @@ namespace RMS_Assistant
             get
             {
                 string allatt = "";
-                for (int i = 0; (NbStringAttribute + NbIntAttribute) > i; i++)
+                for (int i = 0; (NbAttribute) > i; i++)
                 {
                     if      (i == 0) { allatt += Attribute0; }
                     else if (i == 1) { allatt += Attribute1; }
@@ -86,8 +86,6 @@ namespace RMS_Assistant
 
                 Attribute0 = String.Copy(Attribute0),
                 Comment = String.Copy(Comment),
-                Min0 = Min0,
-                Max0 = Max0
             };
             foreach (RMSNode child in Children)
             {

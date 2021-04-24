@@ -13,11 +13,11 @@ namespace RMS_Assistant
         private readonly List<string> Names = new List<string> { "Comment" };
         public override List<string> AllAvailableNames { get { return Names; } }
 
-        private readonly Dictionary<string, int[]> Config = new Dictionary<string, int[]>
+        private readonly Dictionary<string, int> Config = new Dictionary<string, int>
         {
-            {"Comment", new int[10] {0,0,0,0,0,0,0,0,0,0} }
+            {"Comment", 0 }
         };
-        public override Dictionary<string, int[]> DictNameAttributesConfigs { get { return Config; } }
+        public override Dictionary<string, int> DictNameNbAttributes { get { return Config; } }
         public override string AllAttributes { get { return Comment; } }
 
         public RMSComment(RMSNode parent, MainWindow ui) : base("Comment", parent, ui)

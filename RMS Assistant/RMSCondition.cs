@@ -12,7 +12,7 @@ namespace RMS_Assistant
     {
         public override List<string> AllAvailableNames { get { return RMSNodeNameConstants.Conditions.Keys.ToList(); } }
 
-        public override Dictionary<string, int[]> DictNameAttributesConfigs { get { return RMSNodeNameConstants.Conditions; } }
+        public override Dictionary<string, int> DictNameNbAttributes { get { return RMSNodeNameConstants.Conditions; } }
 
         public override string AllAttributes { get { return Attribute0; } }
 

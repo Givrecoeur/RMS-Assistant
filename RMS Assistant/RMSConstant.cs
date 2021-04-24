@@ -12,7 +12,7 @@ namespace RMS_Assistant
     {
         public override List<string> AllAvailableNames { get { return RMSNodeNameConstants.Constants.Keys.ToList(); } }
 
-        public override Dictionary<string, int[]> DictNameAttributesConfigs { get { return RMSNodeNameConstants.Constants; } }
+        public override Dictionary<string, int> DictNameNbAttributes { get { return RMSNodeNameConstants.Constants; } }
 
         public override string AllAttributes { get { return Attribute0 + " " + Attribute1; } }
 
@@ -43,11 +43,7 @@ namespace RMS_Assistant
             RMSConstant clone = new RMSConstant(Parent, UI)
             {
                 Attribute0 = String.Copy(Attribute0),
-                Min0 = Min0,
-                Max0 = Max0,
                 Attribute1 = String.Copy(Attribute1),
-                Min1 = Min1,
-                Max1 = Max1,
                 Comment = String.Copy(Comment)
             };
             return clone;

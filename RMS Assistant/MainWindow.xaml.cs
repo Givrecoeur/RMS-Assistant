@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Forms;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -16,6 +17,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media.TextFormatting;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml.Linq;
 
 namespace RMS_Assistant
 {
@@ -28,6 +30,7 @@ namespace RMS_Assistant
         readonly ColorConstants ColorConsts;
         public RMSRoot Root;
         public RMSNode NodeInCreation;
+        public XDocument XMLDocumentation;
         RMSNode CopiedNode;
 
         public MainWindow()
@@ -60,8 +63,20 @@ namespace RMS_Assistant
                 }
             }
             UpdateDarkMode(true);
+            try
+            {
+                XMLDocumentation = XDocument.Load(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath), "RMSNodeDocumentation.xml"));
+            }
+            catch(FileNotFoundException)
+            {
+                System.Windows.MessageBox.Show("Documentation for nodes could not be loaded, \n the corresponding file RMSNodeDocumentation.xml is missing", "Doc error", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            catch
+            {
+                System.Windows.MessageBox.Show("Documentation for nodes could not be loaded for unknown reasons, \n your file RMSNodeDocumentation.xml might be corrupted", "Doc error", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
 
-        }
+    }
 
         public void UpdateCreationButtons(RMSNode newNode)
         {
@@ -101,7 +116,7 @@ namespace RMS_Assistant
             if (newNode is RMSRoot)
             {
                 NewCommandButton.IsEnabled = false;
-                NewPropertyButton.IsEnabled = true;
+                NewPropertyButton.IsEnabled = false;
                 NewConstantButton.IsEnabled = true;
                 NewDefineButton.IsEnabled = true;
                 PutConditionalButton.IsEnabled = true;
@@ -316,11 +331,13 @@ namespace RMS_Assistant
             if (newNode != null)
             {
                 CreationNodePanel.Children.Clear();
+                NodeInCreation = null;
                 SelectedNodePanel.Children.Clear();
                 AddNewNodeButton.IsEnabled = false;
                 CancelCreationButton.IsEnabled = false;
                 newNode.PrepareInterface();
                 SelectedNodePanel.Children.Add(newNode.Interface);
+                UpdateNodeDocPanel(false);
             }
         }
 
@@ -330,7 +347,58 @@ namespace RMS_Assistant
             {
                 CreationNodePanel.Children.Clear();
                 CreationNodePanel.Children.Add(NodeInCreation.Interface);
+                UpdateNodeDocPanel(false);
             }
+        }
+
+        public void UpdateNodeDocPanel(bool isSearch)
+        {
+            NodeDocumentation.Children.Clear();
+            NodeDocumentationScrollViewer.ScrollToVerticalOffset(0);
+            RMSNode selectedNode = xamlRMSTree.SelectedItem as RMSNode;
+            string nodeToSearch = "";
+            string sectionFilter = "";
+            if (!isSearch)
+            {
+                if (selectedNode != null)
+                {
+                    RMSNode section = selectedNode;
+                    while(section.GetRelevantParent(section) != section)
+                    {
+                        section = section.GetRelevantParent(section);
+                    }
+                    sectionFilter = section.Name;
+                }
+                if (NodeInCreation != null)
+                {
+                    nodeToSearch = NodeInCreation.Name;
+                }
+                else
+                {
+                    
+                    if (selectedNode != null)
+                    {
+                        nodeToSearch = selectedNode.Name;
+                    }
+                }
+                if (nodeToSearch != "")
+                {
+                    NodeDocumentation.Children.Add(new NodeDocumentationPanel(XMLDocumentation, nodeToSearch, sectionFilter));
+                }
+            }
+            else
+            {
+                nodeToSearch = NodeDocSearchField.Text;
+                if (nodeToSearch != "")
+                {
+                    NodeDocumentation.Children.Add(new NodeDocumentationPanel(XMLDocumentation, nodeToSearch));
+                }
+            }
+            /*if (nodeToSearch != "")
+            {
+                NodeDocumentation.Children.Add(new NodeDocumentationPanel(XMLDocumentation, nodeToSearch));
+            }*/
+
         }
 
         public void UpdateDarkMode(bool isDarkMode)
@@ -368,6 +436,7 @@ namespace RMS_Assistant
             CreationNodePanel.Children.Add(NodeInCreation.Interface);
             AddNewNodeButton.IsEnabled = true;
             CancelCreationButton.IsEnabled = true;
+            UpdateNodeDocPanel(false);
         }
 
         private void NewCommandButton_Click(object sender, RoutedEventArgs e)
@@ -412,7 +481,7 @@ namespace RMS_Assistant
             RMSNode newConditional = new RMSConditional(currentNode.Parent, this);
             currentNode.Parent.AddNode(newConditional);
             RMSNode condition = new RMSCondition("if", newConditional, this);
-            condition.Attribute0 = "RANDOM_MAP";
+            //condition.Attribute0 = "RANDOM_MAP";
             newConditional.AddNode(condition);
             condition.AddNode(currentNode);
             currentNode.Parent = condition;
@@ -547,6 +616,8 @@ namespace RMS_Assistant
         private void OpenButton_Click(object sender, RoutedEventArgs e)
         {
             FileManager.OpenFile(Root);
+            RMSNode node = xamlRMSTree.SelectedItem as RMSNode;
+            UpdatePanels(node);
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
@@ -584,6 +655,34 @@ namespace RMS_Assistant
                 ProgressBar.Value = progress;
                 ProgressStatus.Content = message;
             }
+        }
+
+        private void Button_DocSearch_Click(object sender, RoutedEventArgs e)
+        {
+            if (NodeDocSearchField.Text != "")
+            {
+                UpdateNodeDocPanel(true);
+            }
+        }
+
+        private void Button_DocCancel_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateNodeDocPanel(false);
+        }
+
+        private void DiscordButton_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://discord.com/invite/KbTKFpJ");
+        }
+
+        private void AboutThisButton_Click(object sender, RoutedEventArgs e)
+        {
+            return; //TODO
+        }
+
+        private void DocumentationButton_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://docs.google.com/document/d/1jnhZXoeL9mkRUJxcGlKnO98fIwFKStP_OBozpr0CHXo/edit#heading=h.ehe5dkiu96so");
         }
 
         

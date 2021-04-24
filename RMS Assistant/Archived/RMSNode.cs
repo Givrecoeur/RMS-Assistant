@@ -57,7 +57,7 @@ namespace RMS_Assistant
                     Attribute2 = "";
                     Attribute3 = "";
                 }
-                if (DictNameNbAttributes.ContainsKey(value))
+                if (DictNameAttributesConfigs.ContainsKey(value))
                 {
                     SetField(ref _Name, value, "Name");
                 }
@@ -84,7 +84,8 @@ namespace RMS_Assistant
         public abstract List<string> AllAvailableNames { get; }
 
         //Attributes
-        protected int NbAttribute;
+        protected int NbStringAttribute;
+        protected int NbIntAttribute;
         private string _Attribute0 = "";
         public string Attribute0
         {
@@ -133,7 +134,15 @@ namespace RMS_Assistant
                 SetField(ref _Attribute3, value, "Attribute3");
             }
         }
-        public abstract Dictionary<string, int> DictNameNbAttributes { get; }
+        protected int Min0;
+        protected int Max0;
+        protected int Min1;
+        protected int Max1;
+        protected int Min2;
+        protected int Max2;
+        protected int Min3;
+        protected int Max3;
+        public abstract Dictionary<string, int[]> DictNameAttributesConfigs { get; }
         abstract public string AllAttributes { get; }
 
 
@@ -153,7 +162,7 @@ namespace RMS_Assistant
 
             if (Parent != null)
             {
-                NbAttribute = DictNameNbAttributes[Name];
+                ChangeAttributeConfig(DictNameAttributesConfigs[Name]);
             }
         }
 
@@ -165,11 +174,33 @@ namespace RMS_Assistant
             }
         }
 
+        public void ChangeAttributeConfig(int[] newConfig)
+        {
+            if (newConfig.Length >= 10)
+            {
+                NbStringAttribute = newConfig[0];
+                NbIntAttribute = newConfig[1];
+
+                Min0 = newConfig[2];
+                Max0 = newConfig[3];
+                Min1 = newConfig[4];
+                Max1 = newConfig[5];
+                Min2 = newConfig[6];
+                Max2 = newConfig[7];
+                Min3 = newConfig[8];
+                Max3 = newConfig[9];
+            }
+            else
+            {
+                throw new Exception("Erroneous attribute config");
+            }
+        }
+
         public void PrepareInterface()
         {
-        if (DictNameNbAttributes.ContainsKey(Name))
+        if (DictNameAttributesConfigs.ContainsKey(Name))
             {
-               NbAttribute = DictNameNbAttributes[Name];
+               ChangeAttributeConfig(DictNameAttributesConfigs[Name]);
                SetUpInterface();
             }
         }
@@ -186,50 +217,67 @@ namespace RMS_Assistant
             int selectedIndex = Interface.Names.SelectedIndex;
             Interface.Names.SelectedIndex = index;
 
-            if (NbAttribute > 0)
-            {
-                Label ArgsLabel = new Label
-                {
-                    Content = "Args :",
-                    FontWeight = FontWeights.Bold,
-                    Margin = new Thickness(0, 5, 0, 0)
-                };
-                Interface.AttributesPannel.Children.Add(ArgsLabel);
-            }
-
             int currentAttributeNb = 0;
-            for (int i = 0; i < NbAttribute; i++)
+            for (int i = 0; i < NbStringAttribute; i++)
             {
-                AttributeDisplay attributeInterface = new AttributeDisplay(); //USE COMBOBOX WITH IsEditable to True with Items linked to all available type (with scrollbar)
+                StringAttributeDisplayer attributeInterface = new StringAttributeDisplayer(); //USE COMBOBOX WITH IsEditable to True with Items linked to all available type (with scrollbar)
                 Binding myBinding;// = new Binding();
 
                 if (currentAttributeNb == 0)
                 {
                     myBinding = new Binding("Attribute0");
-                    attributeInterface.TextChanged += Attribute0Value_TextChanged;
-                    attributeInterface.Text = Attribute0;
+                    attributeInterface.AttributeValue.TextChanged += Attribute0Value_TextChanged;
+                    attributeInterface.AttributeValue.Text = Attribute0;
+
+                }
+                else // currentAttributeNb == 1
+                {
+                    myBinding = new Binding("Attribute1");
+                    attributeInterface.AttributeValue.TextChanged += Attribute1Value_TextChanged;
+                    attributeInterface.AttributeValue.Text = Attribute1;
+                }
+                myBinding.Source = this;
+                attributeInterface.AttributeValue.SetBinding(TextBlock.TextProperty, myBinding); //selectedItem
+                Interface.AttributesPannel.Children.Add(attributeInterface);
+
+                currentAttributeNb++;
+            }
+
+            for (int i = 0; i < NbIntAttribute; i++)
+            {
+                IntAttributeDisplayer attributeInterface;
+                Binding myBinding;
+                if (currentAttributeNb == 0)
+                {
+                    attributeInterface = new IntAttributeDisplayer(Min0, Max0);
+                    myBinding = new Binding("Attribute0");
+                    attributeInterface.AttributeValue.TextChanged += Attribute0Value_TextChanged;
+                    attributeInterface.AttributeValue.Text = Attribute0;
 
                 }
                 else if (currentAttributeNb == 1)
                 {
+                    attributeInterface = new IntAttributeDisplayer(Min1, Max1);
                     myBinding = new Binding("Attribute1");
-                    attributeInterface.TextChanged += Attribute1Value_TextChanged;
-                    attributeInterface.Text = Attribute1;
+                    attributeInterface.AttributeValue.TextChanged += Attribute1Value_TextChanged;
+                    attributeInterface.AttributeValue.Text = Attribute1;
                 }
                 else if (currentAttributeNb == 2)
                 {
+                    attributeInterface = new IntAttributeDisplayer(Min2, Max2);
                     myBinding = new Binding("Attribute2");
-                    attributeInterface.TextChanged += Attribute2Value_TextChanged;
-                    attributeInterface.Text = Attribute2;
+                    attributeInterface.AttributeValue.TextChanged += Attribute2Value_TextChanged;
+                    attributeInterface.AttributeValue.Text = Attribute2;
                 }
                 else // currentAttributeNb == 3
                 {
+                    attributeInterface = new IntAttributeDisplayer(Min3, Max3);
                     myBinding = new Binding("Attribute3");
-                    attributeInterface.TextChanged += Attribute3Value_TextChanged;
-                    attributeInterface.Text = Attribute3;
+                    attributeInterface.AttributeValue.TextChanged += Attribute3Value_TextChanged;
+                    attributeInterface.AttributeValue.Text = Attribute3;
                 }
                 myBinding.Source = this;
-                attributeInterface.SetBinding(TextBlock.TextProperty, myBinding); //selectedItem
+                attributeInterface.AttributeValue.SetBinding(TextBlock.TextProperty, myBinding);
                 Interface.AttributesPannel.Children.Add(attributeInterface);
 
                 currentAttributeNb++;
@@ -241,31 +289,31 @@ namespace RMS_Assistant
         public bool CheckAttributesPresence()
         {
             bool AllOK = true;
-            for (int i = 1; i < NbAttribute + 1; i++) //i = 0 is a label object
+            for (int i = 0; i < NbStringAttribute + NbIntAttribute; i++)
             {
-                if (i == 1)
+                if (i == 0)
                 {
-                    AttributeDisplay display = Interface.AttributesPannel.Children[1] as AttributeDisplay;
-                    if (Attribute0 == "") { display.BorderBrush = new SolidColorBrush(Colors.Red); AllOK = false; }
-                    else display.BorderBrush = new SolidColorBrush(Colors.Black);
+                    AttributeDisplayer display = Interface.AttributesPannel.Children[0] as AttributeDisplayer;
+                    if (Attribute0 == "") { display.AttributeValue.BorderBrush = new SolidColorBrush(Colors.Red); AllOK = false; }
+                    else display.AttributeValue.BorderBrush = new SolidColorBrush(Colors.Black);
+                }
+                else if (i == 1)
+                {
+                    AttributeDisplayer display = Interface.AttributesPannel.Children[1] as AttributeDisplayer;
+                    if (Attribute1 == "") { display.AttributeValue.BorderBrush = new SolidColorBrush(Colors.Red); AllOK = false; }
+                    else display.AttributeValue.BorderBrush = new SolidColorBrush(Colors.Black);
                 }
                 else if (i == 2)
                 {
-                    AttributeDisplay display = Interface.AttributesPannel.Children[2] as AttributeDisplay;
-                    if (Attribute1 == "") { display.BorderBrush = new SolidColorBrush(Colors.Red); AllOK = false; }
-                    else display.BorderBrush = new SolidColorBrush(Colors.Black);
-                }
-                else if (i == 3)
-                {
-                    AttributeDisplay display = Interface.AttributesPannel.Children[3] as AttributeDisplay;
-                    if (Attribute2 == "") { display.BorderBrush = new SolidColorBrush(Colors.Red); AllOK = false; }
-                    else display.BorderBrush = new SolidColorBrush(Colors.Black);
+                    AttributeDisplayer display = Interface.AttributesPannel.Children[2] as AttributeDisplayer;
+                    if (Attribute2 == "") { display.AttributeValue.BorderBrush = new SolidColorBrush(Colors.Red); AllOK = false; }
+                    else display.AttributeValue.BorderBrush = new SolidColorBrush(Colors.Black);
                 }
                 else // (i == 3)
                 {
-                    AttributeDisplay display = Interface.AttributesPannel.Children[4] as AttributeDisplay;
-                    if (Attribute3 == "") { display.BorderBrush = new SolidColorBrush(Colors.Red); AllOK = false; }
-                    else display.BorderBrush = new SolidColorBrush(Colors.Black);
+                    AttributeDisplayer display = Interface.AttributesPannel.Children[3] as AttributeDisplayer;
+                    if (Attribute3 == "") { display.AttributeValue.BorderBrush = new SolidColorBrush(Colors.Red); AllOK = false; }
+                    else display.AttributeValue.BorderBrush = new SolidColorBrush(Colors.Black);
                 }
             }
             return AllOK;

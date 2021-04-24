@@ -22,12 +22,6 @@ namespace RMS_Assistant
         public ComboBox Names;
         public TextBox Comment;
 
-
-        public Button MoveDown;
-        public Button MoveUp;
-        public Button DeleteNode;
-        public Button Select;
-
         public NodeInterface(RMSNode node)
         {
             Node = node;
@@ -57,17 +51,48 @@ namespace RMS_Assistant
             commentLabel.Content = "Note : ";
             commentLabel.Margin = new Thickness(0, 5, 0, 0);
             Comment = new TextBox();
-            Comment.Width = 350;
+            Comment.Width = 330;
             Comment.Height = 20;
             Comment.TextChanged += Comment_TextChanged;
             CommentPannel.Children.Add(commentLabel);
             CommentPannel.Children.Add(Comment);
 
             Children.Add(NamePannel);
-            Children.Add(AttributesPannel);
+            if (node is RMSRoot)
+            {
+                CheckBox useCliffCheckBox = new CheckBox();
+                useCliffCheckBox.Content = "Use Cliff section (CAUTION: delete any existing one if unchecked!)";
+                useCliffCheckBox.Click += UseCliffCheckBox_Click;
+                useCliffCheckBox.Margin = new Thickness(15, 5, 0, 5);
+                RMSRoot root = node as RMSRoot;
+                if (root.useCliff) useCliffCheckBox.IsChecked = true;
+                else useCliffCheckBox.IsChecked = false;
+                Children.Add(useCliffCheckBox);
+
+            }
+            else
+            {
+                Children.Add(AttributesPannel);
+            }
             Children.Add(CommentPannel);
 
         }
+
+        private void UseCliffCheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            CheckBox box = sender as CheckBox;
+            RMSRoot root = Node as RMSRoot;
+            if ((bool)box.IsChecked)
+            {
+                root.useCliff = true;
+            }
+            else
+            {
+                root.useCliff = false;
+            }
+            root.ManageCliffSection();
+        }
+
 
         private void Comment_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -84,6 +109,18 @@ namespace RMS_Assistant
                 Node.PrepareInterface();
                 Node.UI.UpdateNodeInCreationPanel();
             }
+        }
+    }
+
+
+    public class AttributeDisplay : TextBox
+    {
+        public AttributeDisplay()
+        {
+            Width = 70;
+            Height = 20;
+            Margin = new Thickness(5, 0, 5, 0);
+            BorderBrush = Brushes.Black;
         }
     }
 

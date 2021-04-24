@@ -5,12 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RMS_Assistant"
         mc:Ignorable="d"
-        Title="RMS Assistant" Height="900" Width="1600" MinHeight="500" MinWidth="800"
+        Title="RMS Assistant" Height="900" Width="1600" MinHeight="700" MinWidth="1250"
         Closing="Window_Closing">
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*" />
-            <ColumnDefinition Width="1*" MinWidth="400"/>
+            <ColumnDefinition Width="1*" MinWidth="400" />
+            <ColumnDefinition Width="1*" MinWidth="820"/>
         </Grid.ColumnDefinitions>
         <TreeView Name="xamlRMSTree" SelectedItemChanged="xamlRMSTree_SelectedItemChanged">
             <TreeView.ItemContainerStyle>
@@ -95,129 +95,189 @@
                 </DataTemplate>
             </TreeView.Resources>
         </TreeView>
-        <Grid Grid.Column="1" Margin="5" >
-            <Grid.RowDefinitions>
-                <RowDefinition Height="0*" MinHeight="270"/>
-                <RowDefinition Height="0*" MinHeight="180"/>
-                <RowDefinition Height="3*"/>
-                <RowDefinition Height="0*" MinHeight="40"/>
-            </Grid.RowDefinitions>
-            <Border Grid.Row="0" BorderBrush="Black" BorderThickness="1"/>
-            <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1"/>
-            <Border Grid.Row="2" BorderBrush="Black" BorderThickness="1"/>
-            <Border Grid.Row="3" BorderBrush="Black" BorderThickness="1"/>
-
-            <Grid Grid.Row="0">
+        <Grid Grid.Column="1" Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0*" MinWidth="400"/>
+                <ColumnDefinition Width="1*" MinWidth="400"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0" Margin="5" >
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="0*" MinHeight="30"/>
-                    <RowDefinition Height="*" MinHeight="120"/>
-                    <RowDefinition Height="0*" MinHeight="120"/>
+                    <RowDefinition Height="0*" MinHeight="270"/>
+                    <RowDefinition Height="0*" MinHeight="180"/>
+                    <RowDefinition Height="3*"/>
+                    <RowDefinition Height="0*" MinHeight="40"/>
                 </Grid.RowDefinitions>
+                <Border Grid.Row="0" BorderBrush="Black" BorderThickness="1"/>
+                <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1"/>
+                <Border Grid.Row="2" BorderBrush="Black" BorderThickness="1"/>
+                <Border Grid.Row="3" BorderBrush="Black" BorderThickness="1"/>
+                
                 <Grid Grid.Row="0">
-                    <Label Content="Selected Node" />
-                </Grid>
-                <Grid Grid.Row="1" x:Name="SelectedNodePanel">
-
-                </Grid>
-                <StackPanel Grid.Row="2" Orientation="Vertical">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Button x:Name="NewCommandButton" Grid.Column="0" VerticalAlignment="Center" Height="20" Click="NewCommandButton_Click" Margin="5" IsEnabled="False">New Command</Button>
-                        <Button x:Name="NewPropertyButton" Grid.Column="1" VerticalAlignment="Center" Height="20" Click="NewPropertyButton_Click" Margin="5" IsEnabled="False">New Property</Button>
-                        <Button x:Name="NewConstantButton" Grid.Column="2" VerticalAlignment="Center" Height="20" Click="NewConstantButton_Click" Margin="5" IsEnabled="False">New Constant</Button>
-                        <Button x:Name="NewDefineButton" Grid.Column="3" VerticalAlignment="Center" Height="20" Click="NewDefineButton_Click" Margin="5" IsEnabled="False">New Define</Button>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0*" MinHeight="30"/>
+                        <RowDefinition Height="*" MinHeight="120"/>
+                        <RowDefinition Height="0*" MinHeight="120"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Label Content="Selected Node" />
                     </Grid>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Button x:Name="PutConditionalButton" Grid.Column="0" VerticalAlignment="Center" Height="20" Click="PutConditionalButton_Click" Margin="5" IsEnabled="False">Put Conditional</Button>
-                        <Button x:Name="NewConditionButton" Grid.Column="1" VerticalAlignment="Center" Height="20" Click="NewConditionButton_Click" Margin="5" IsEnabled="False">New Condition</Button>
-                        <Button x:Name="NewRandomButton" Grid.Column="2" VerticalAlignment="Center" Height="20" Click="NewRandomButton_Click" Margin="5" IsEnabled="False">New Random</Button>
-                        <Button x:Name="AddWeigthButton" Grid.Column="3" VerticalAlignment="Center" Height="20" Click="AddWeigthButton_Click" Margin="5" IsEnabled="False">Add Weigth</Button>
-                        
+                    <Grid Grid.Row="1" x:Name="SelectedNodePanel">
+                
                     </Grid>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Button x:Name="MakeConditionalButton" Grid.Column="0" VerticalAlignment="Center" Height="20" Click="MakeConditionalButton_Click" Margin="5" IsEnabled="False">Make Conditional</Button>
-                        <Button x:Name="RandomizeButton" Grid.Column="1" VerticalAlignment="Center" Height="20" Click="RandomizeButton_Click" Margin="5" IsEnabled="False">Randomize</Button>
-                        <Button x:Name="MoveUpButton" Grid.Column="2" VerticalAlignment="Center" Height="20" Click="MoveUpButton_Click" Margin="5" IsEnabled="False">Move Up</Button>
-                        <Button x:Name="NewCommentButton" Grid.Column="3" VerticalAlignment="Center" Height="20" Click="NewCommentButton_Click" Margin="5" IsEnabled="False">New Comment</Button>
-                    </Grid>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Button x:Name="CopyButton" Grid.Column="0" VerticalAlignment="Center" Height="20" Click="CopyButton_Click" Margin="5" IsEnabled="False">Copy Node</Button>
-                        <Button x:Name="PasteButton" Grid.Column="1" VerticalAlignment="Center" Height="20" Click="PasteButton_Click" Margin="5" IsEnabled="False">Paste Node</Button>
-                        <Button x:Name="MoveDownButton" Grid.Column="2" VerticalAlignment="Center" Height="20" Click="MoveDown_Click" Margin="5" IsEnabled="False">Move Down</Button>
-                        <Button x:Name="DeleteButton" Grid.Column="3" VerticalAlignment="Center" Height="20" Click="Delete_Click" Margin="5" IsEnabled="False">Delete</Button>
-                    </Grid>
-                </StackPanel>
-
-            </Grid>
-
-            <Grid Grid.Row="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="0*" MinHeight="30"/>
-                    <RowDefinition Height="*" MinHeight="120"/>
-                    <RowDefinition Height="0*" MinHeight="30"/>
-                </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
-                    <Label Content="New Node Creation" />
-                </Grid>
-                <Grid Grid.Row="1" x:Name="CreationNodePanel">
-
-                </Grid>
-                <StackPanel Grid.Row="2" Orientation="Horizontal" FlowDirection="RightToLeft">
-                    <Button x:Name="AddNewNodeButton" Grid.Column="0" VerticalAlignment="Center" Height="20" Click="AddNewNodeButton_Click" Margin="5" Width="80" IsEnabled="False">Add Node</Button>
-                    <Button x:Name="CancelCreationButton" Grid.Column="1" VerticalAlignment="Center" Height="20" Click="CancelCreationButton_Click" Margin="5" Width="80" IsEnabled="False">Cancel</Button>
-                </StackPanel>
-            </Grid>
-
-            <Grid Grid.Row="2">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="5">
-                    <StackPanel x:Name="ToolTipsPannel" Orientation="Vertical">
-                        <Label Content="ToolTip Pannel : WiP" />
+                    <StackPanel Grid.Row="2" Orientation="Vertical">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button x:Name="NewCommandButton" Grid.Column="0" VerticalAlignment="Center" Height="20" Click="NewCommandButton_Click" Margin="5" IsEnabled="False">New Command</Button>
+                            <Button x:Name="NewPropertyButton" Grid.Column="1" VerticalAlignment="Center" Height="20" Click="NewPropertyButton_Click" Margin="5" IsEnabled="False">New Property</Button>
+                            <Button x:Name="NewConstantButton" Grid.Column="2" VerticalAlignment="Center" Height="20" Click="NewConstantButton_Click" Margin="5" IsEnabled="False">New Constant</Button>
+                            <Button x:Name="NewDefineButton" Grid.Column="3" VerticalAlignment="Center" Height="20" Click="NewDefineButton_Click" Margin="5" IsEnabled="False">New Define</Button>
+                        </Grid>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button x:Name="PutConditionalButton" Grid.Column="0" VerticalAlignment="Center" Height="20" Click="PutConditionalButton_Click" Margin="5" IsEnabled="False">Put Conditional</Button>
+                            <Button x:Name="NewConditionButton" Grid.Column="1" VerticalAlignment="Center" Height="20" Click="NewConditionButton_Click" Margin="5" IsEnabled="False">New Condition</Button>
+                            <Button x:Name="NewRandomButton" Grid.Column="2" VerticalAlignment="Center" Height="20" Click="NewRandomButton_Click" Margin="5" IsEnabled="False">New Random</Button>
+                            <Button x:Name="AddWeigthButton" Grid.Column="3" VerticalAlignment="Center" Height="20" Click="AddWeigthButton_Click" Margin="5" IsEnabled="False">Add Weigth</Button>
+                
+                        </Grid>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button x:Name="MakeConditionalButton" Grid.Column="0" VerticalAlignment="Center" Height="20" Click="MakeConditionalButton_Click" Margin="5" IsEnabled="False">Mk Conditional</Button>
+                            <Button x:Name="RandomizeButton" Grid.Column="1" VerticalAlignment="Center" Height="20" Click="RandomizeButton_Click" Margin="5" IsEnabled="False">Randomize</Button>
+                            <Button x:Name="MoveUpButton" Grid.Column="2" VerticalAlignment="Center" Height="20" Click="MoveUpButton_Click" Margin="5" IsEnabled="False">Move Up</Button>
+                            <Button x:Name="NewCommentButton" Grid.Column="3" VerticalAlignment="Center" Height="20" Click="NewCommentButton_Click" Margin="5" IsEnabled="False">New Comment</Button>
+                        </Grid>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button x:Name="CopyButton" Grid.Column="0" VerticalAlignment="Center" Height="20" Click="CopyButton_Click" Margin="5" IsEnabled="False">Copy Node</Button>
+                            <Button x:Name="PasteButton" Grid.Column="1" VerticalAlignment="Center" Height="20" Click="PasteButton_Click" Margin="5" IsEnabled="False">Paste Node</Button>
+                            <Button x:Name="MoveDownButton" Grid.Column="2" VerticalAlignment="Center" Height="20" Click="MoveDown_Click" Margin="5" IsEnabled="False">Move Down</Button>
+                            <Button x:Name="DeleteButton" Grid.Column="3" VerticalAlignment="Center" Height="20" Click="Delete_Click" Margin="5" IsEnabled="False">Delete</Button>
+                        </Grid>
                     </StackPanel>
-                </ScrollViewer>
-            </Grid>
+                
+                </Grid>
+                
+                <Grid Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0*" MinHeight="30"/>
+                        <RowDefinition Height="*" MinHeight="120"/>
+                        <RowDefinition Height="0*" MinHeight="30"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Label Content="New Node Creation" />
+                    </Grid>
+                    <Grid Grid.Row="1" x:Name="CreationNodePanel">
+                
+                    </Grid>
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" FlowDirection="RightToLeft">
+                        <Button x:Name="AddNewNodeButton" Grid.Column="0" VerticalAlignment="Center" Height="20" Click="AddNewNodeButton_Click" Margin="5" Width="80" IsEnabled="False">Add Node</Button>
+                        <Button x:Name="CancelCreationButton" Grid.Column="1" VerticalAlignment="Center" Height="20" Click="CancelCreationButton_Click" Margin="5" Width="80" IsEnabled="False">Cancel</Button>
+                    </StackPanel>
+                </Grid>
+                
+                <Grid Grid.Row="2">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="5">
+                        <StackPanel x:Name="QuickActionsPanel" Orientation="Vertical">
+                            <Label Content="Quick Actions : WiP" />
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
 
-            <Grid Grid.Row="3">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="0*" MinWidth="50" />
-                    <ColumnDefinition Width="0*" MinWidth="0"/>
-                    <ColumnDefinition Width="1*" MinWidth="220"/>
-                </Grid.ColumnDefinitions>
-                <!-- <CheckBox x:Name="IsDarkMode" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10" IsChecked="True" Checked="IsDarkMode_Checked" Unchecked="IsDarkMode_Unchecked">DM</CheckBox> -->
-                <StackPanel Grid.Column="1" Orientation="Vertical">
-                    <ProgressBar x:Name="ProgressBar" Visibility="Hidden" Minimum="0" Maximum="100"/>
-                    <Label x:Name="ProgressStatus" Visibility="Hidden"/>
-                </StackPanel>
-                <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button x:Name="QuitButton" Grid.Column="0" VerticalAlignment="Center" Width="48" Height="24" Click="QuitButton_Click" Margin="5">Quit</Button>
-                    <Button x:Name="LoadButton" Grid.Column="0" VerticalAlignment="Center" Width="48" Height="24" Click="OpenButton_Click" Margin="5">Open</Button>
-                    <Button x:Name="SaveButton" Grid.Column="0" VerticalAlignment="Center" Width="48" Height="24" Click="SaveButton_Click" Margin="5">Save</Button>
-                    <Button x:Name="SaveAsButton" Grid.Column="0" VerticalAlignment="Center" Width="48" Height="24" Click="SaveAsButton_Click" Margin="5">Save As</Button>
-                </StackPanel>
+                <Grid Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0*" MinWidth="50" />
+                        <ColumnDefinition Width="0*" MinWidth="0"/>
+                        <ColumnDefinition Width="1*" MinWidth="220"/>
+                    </Grid.ColumnDefinitions>
+                    <!-- <CheckBox x:Name="IsDarkMode" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10" IsChecked="True" Checked="IsDarkMode_Checked" Unchecked="IsDarkMode_Unchecked">DM</CheckBox> -->
+                    <StackPanel Grid.Column="1" Orientation="Vertical">
+                        <ProgressBar x:Name="ProgressBar" Visibility="Hidden" Minimum="0" Maximum="100"/>
+                        <Label x:Name="ProgressStatus" Visibility="Hidden"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button x:Name="QuitButton" Grid.Column="0" VerticalAlignment="Center" Width="48" Height="24" Click="QuitButton_Click" Margin="5">Quit</Button>
+                        <Button x:Name="LoadButton" Grid.Column="0" VerticalAlignment="Center" Width="48" Height="24" Click="OpenButton_Click" Margin="5">Open</Button>
+                        <Button x:Name="SaveButton" Grid.Column="0" VerticalAlignment="Center" Width="48" Height="24" Click="SaveButton_Click" Margin="5">Save</Button>
+                        <Button x:Name="SaveAsButton" Grid.Column="0" VerticalAlignment="Center" Width="48" Height="24" Click="SaveAsButton_Click" Margin="5">Save As</Button>
+                    </StackPanel>
+                </Grid>
             </Grid>
-
+            <Grid Grid.Column="1" Margin="5" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*" MinHeight="270"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="0*" MinHeight="40"/>
+                </Grid.RowDefinitions>
+                <Border Grid.Row="0" BorderBrush="Black" BorderThickness="1"/>
+                <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1"/>
+                <Border Grid.Row="2" BorderBrush="Black" BorderThickness="1"/>
+                <Grid Grid.Row="0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="0*" MinHeight="30"/>
+                            <RowDefinition Height="1*"/>
+                        </Grid.RowDefinitions>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="0*" MinWidth="60"/>
+                                <ColumnDefinition Width="0*" MinWidth="60"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0*" MinWidth="130"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0">Node Documentation</Label>
+                                <TextBox Grid.Column="1" x:Name="NodeDocSearchField" Margin="5"></TextBox>
+                            </Grid>
+                            <Button Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" Height="20" Click="Button_DocSearch_Click">Search</Button>
+                            <Button Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" Height="20" Click="Button_DocCancel_Click">Cancel</Button>
+                        </Grid>
+                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="5" x:Name="NodeDocumentationScrollViewer">
+                            <Grid x:Name="NodeDocumentation"/>
+                        </ScrollViewer>
+                    </Grid>
+                </Grid>
+                <Grid Grid.Row="1">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="5">
+                        <StackPanel x:Name="DocumentationPanel" Orientation="Vertical">
+                            <Label Content="Global Documentation : WiP" />
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" MinWidth="220"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button x:Name="AboutThisButton" Grid.Column="0" VerticalAlignment="Center" Width="80" Height="24" Click="AboutThisButton_Click"  Margin="5">ReadMe</Button>
+                        <Button x:Name="DocumentationButton" Grid.Column="0" VerticalAlignment="Center" Width="80" Height="24" Click="DocumentationButton_Click"  Margin="5">Online Doc</Button>
+                        <Button x:Name="DiscordButton" Grid.Column="0" VerticalAlignment="Center" Width="80" Height="24" Click="DiscordButton_Click" Margin="5">RMS Discord</Button>
+                    </StackPanel>
+                </Grid>
+            </Grid>
         </Grid>
     </Grid>
 </Window>

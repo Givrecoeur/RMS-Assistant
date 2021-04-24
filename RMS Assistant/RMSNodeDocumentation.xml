@@ -1,0 +1,917 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<RMSDocumentation>
+  
+  <!--blueprint for a node, elements with a number at the end can be used as many time as you want as long as you increment the number each time, or can not be used at all if not needed (only the node's attributes and the "Description" element are mandatory")-->
+  <!--don't hesitate when adding new entry to look how all existing onse are formated if you have any doubt, and put them in their correct section-->
+  <!--keep in mind when writting text, in XML : < is &lt;   > is &gt;   & is &amp;   'new line' is &#xD;   (for more google "XML escape characters"), remember that you may also have to escape characters in url after having copied them in the document or link won't work-->
+  <Node Name="name_of_node" Location="location_of_node" Type="type_of_node" GameVersion="versions_of_game_compatible_with_node">
+    <Incompatibility1>name_of_incompatible_node_1</Incompatibility1>
+    <Incompatibility2>name_of_incompatible_node_2</Incompatibility2>
+    <ExternalReference1 Link="url1">name_of_ref_1</ExternalReference1>
+    <ExternalReference2 Link="url2">name_of_ref_2</ExternalReference2>
+    <Argument1 Name="argument_1_name">argument_1_description</Argument1>
+    <Argument2 Name="argument_2_name">argument_2_description</Argument2>
+    <Description>decription_of_node</Description>
+    <AdditionalInfo1>additionnal_info_1</AdditionalInfo1>
+    <AdditionalInfo2>additionnal_info_2</AdditionalInfo2>
+    <Bug1>additionnal_info_1</Bug1>
+    <Bug2>additionnal_info_2</Bug2>
+    <Example1 Description="example_1_description">example_1</Example1>
+    <Example2 Description="example_2_description">example_2</Example2>
+  </Node>
+  
+  <!--Miscelanious Node-->
+  
+  <!--PLAYER_SETUP section-->
+  <Node Name="PLAYER_SETUP" Location="PLAYER_SETUP" Type="Section header" GameVersion="All">
+    <Description>
+      Required section. Determines how players will be placed, and modifies global parameters.
+    </Description>
+    <AdditionalInfo1>Default : random_placement</AdditionalInfo1>
+  </Node>
+
+  <Node Name="random_placement" Location="PLAYER_SETUP" Type="Property " GameVersion="All">
+    <Incompatibility1>grouped_by_team</Incompatibility1>
+    <Description>
+      Players are positioned in a circle/oval with some variation. This is the default, and will apply even if you do not type it.
+    </Description>
+  </Node>
+
+  <Node Name="grouped_by_team" Location="PLAYER_SETUP" Type="Property" GameVersion="UP/HD/DE">
+    <Incompatibility1>random_placement</Incompatibility1>
+    <Description>
+      Players are positioned in close proximity to each other. Distance between team members is double the base_size used in create_player_lands.
+    </Description>
+  </Node>
+
+  <Node Name="direct_placement" Location="PLAYER_SETUP" Type="Property" GameVersion="UP/DE">
+    <Description>
+      Allows the land_position attribute in create_land to be used in combination with the assign_to_player or assign_to attributes to individually position players at exact positions on the map.
+    </Description>
+    <AdditionalInfo1>On UP, !P will be appended to the map name in the objectives window.</AdditionalInfo1>
+    <AdditionalInfo2>On UP, it can be used in combination with random_placement / grouped_by_team</AdditionalInfo2>
+    <Bug1>(DE): disables random_placement and grouped_by_team. If used with create_player_lands, these lands will be positioned entirely at random (ignoring the normal circular positioning), so this is usually not desirable.</Bug1>
+    <Bug2>(DE): breaks future random_placement maps in the scenario editor. After testing a direct_placement map, you must return to the main menu, AND launch a singleplayer game on a map that uses random_placement to fix this issue. Or restart the game, but that takes longer.</Bug2>
+    <Example1 Description="Directly place player 1 at the center of the map (50%, 50%).">&lt;PLAYER_SETUP&gt;&#xD;direct_placement&#xD;&lt;LAND_GENERATION&gt;&#xD;create_land {&#xD;    terrain_type DESERT&#xD;    land_percent 3&#xD;    land_position 50 50&#xD;    assign_to_player 1&#xD;}</Example1>
+  </Node>
+
+  <Node Name="nomad_resources" Location="PLAYER_SETUP" Type="PLAYER_SECTION\Property" GameVersion="UP/HD/DE">
+    <Description>
+      Adds the cost of a town center (275 Wood, 100 Stone) to every player's starting resources.  Use this in your custom nomad map if you want players to be able to build a town center without first gathering wood.
+    </Description>
+  </Node>
+
+  <Node Name="ai_info_map_type" Location="PLAYER_SETUP" Type="Property" GameVersion="All">
+    <Argument1 Name="MapType">Map type constant (see: Map Types in global documentation) (default: CUSTOM)&#xD;Specify a standard map type that your map is similar to.</Argument1>
+    <Argument2 Name="IsNomad">boolean (1 or 0) (default: 0)&#xD;Specify if your map is nomad style (no town center to start with).&#xD;Always use this on nomad starts since it prevents issues where ally locations are revealed (fixed in DE)</Argument2>
+    <Argument3 Name="IsMichi">boolean (1 or 0) (default: 0)&#xD;Specify if your map is Michi style (forest completely separating players).</Argument3>
+    <Argument4 Name="ShowType">boolean (1 or 0) (default: 0)&#xD;Specify if you want your chosen map type to be shown in the objectives window (only works in UP)</Argument4>
+    <Description>
+      Provide information about the map to AIs.  If your map is not similar to an existing map, it is best to use CUSTOM as the map type, or to leave out the command entirely.
+    </Description>
+    <Example1 Description="A map that is similar to Arabia, but has a nomad start, and you want the objectives screen to say Arabia.">&lt;PLAYER_SETUP&gt;&#xD;ai_info_map_type ARABIA 1 0 1</Example1>
+  </Node>
+
+  <Node Name="weather_type" Location="PLAYER_SETUP" Type="Property" GameVersion="UP">
+    <ExternalReference1 Link="http://aok.heavengames.com/cgi-bin/forums/display.cgi?action=ct&amp;f=26,42296,,365">Weather Effects Guide</ExternalReference1>
+    <Argument1 Name="PrecipitationStyle">number (-4 to 4) (default: 0)&#xD;0 is no precipitation; 2 is rain; 3 is thunderstorm; 4 is snow.&#xD;Precipitation goes west to east.  Use negative numbers for east to west.</Argument1>
+    <Argument2 Name="LiveColor">number (0 to 255) (default: 0)&#xD;Color of terrain tinting in revealed areas.&#xD;0 is none; 1-255 refers to the color palette (see external reference).</Argument2>
+    <Argument3 Name="FogColor">number (0 to 255) (default: 0)&#xD;Color of terrain tinting in the fog of war.&#xD;0 is none; 1-255 refers to the color palette (see external reference).</Argument3>
+    <Argument4 Name="WaterDirection">number (-1 to 1) (default 0)&#xD;Direction of animated water.&#xD;0 is random; 1 is west to east; -1 is east to west.</Argument4>
+    <Description>
+      Set up precipitation and terrain tinting.
+    </Description>
+    <AdditionalInfo1>It usually looks good match the precipitation and water direction</AdditionalInfo1>
+    <AdditionalInfo2>It often makes sense to pick similar colors for live and fog tinting</AdditionalInfo2>
+    <AdditionalInfo3>Terrain tinting looks bad on streams and recordings, so you may want to leave it out.</AdditionalInfo3>
+    <Example1 Description="Westward thunderstorm">&lt;PLAYER_SETUP&gt;&#xD;weather_type -3 16 0 -1</Example1>
+  </Node>
+
+  <Node Name="effect_amount" Location="PLAYER_SETUP" Type="Property" GameVersion="UP/DE">
+    <ExternalReference1 Link="http://aok.heavengames.com/cgi-bin/forums/display.cgi?action=ct&amp;f=4,44466,0,365">UserPatch Effects Guide</ExternalReference1>
+    <Argument1 Name="EffectType">effect constant (see: Effect Constants in global documentation)</Argument1>
+    <Argument2 Name="Type">object/resource/technology/effect constant (see: Objects, Resource Constants, Technology Constants, Miscellaneous Constants, Class Constants, Advanced Genie Editor in global documentation)</Argument2>
+    <Argument3 Name="AttributeType">attribute constant (see: Attribute Constants in global documentation)</Argument3>
+    <Argument4 Name="Amount">number</Argument4>
+    <Description>
+      Modify various aspects of the gamdata, specifically for your map. See the linked guide for a better overview of the possibilities
+    </Description>
+    <AdditionalInfo1>When modifying objects, you may need to target ALL hidden variations, one-by-one.</AdditionalInfo1>
+    <AdditionalInfo2>If an object ends up with more than 32768 hitpoints, it is instantly destroyed. Be sure to consider in-game upgrades.</AdditionalInfo2>
+    <AdditionalInfo3>If you disable an object with this command, in-game techs/ages (unless disabled) may re-enable it. The civ tech tree may also override changes.</AdditionalInfo3>
+    <AdditionalInfo4>(UP only) !C will be appended to the map name in the Objectives window.</AdditionalInfo4>
+    <AdditionalInfo5>In vanilla UP only, the relevant constants must first be defined before use.</AdditionalInfo5>
+    <Example1 Description="Add 10000 starting food.">&lt;PLAYER_SETUP&gt;&#xD;effect_amount MOD_RESOURCE AMOUNT_STARTING_FOOD ATTR_ADD 10000</Example1>
+    <Example2 Description="Enable a stone trickle from controlling the monument.">&lt;PLAYER_SETUP&gt;&#xD;effect_amount MOD_RESOURCE AMOUNT_MONUMENT_TRICKLE_STONE ATTR_SET 1</Example2>
+    <Example3 Description="Houses support 10/15/20/25 population in dark/feudal/castle/imperial age.">&lt;PLAYER_SETUP&gt;&#xD;effect_amount SET_ATTRIBUTE HOUSE ATTR_STORAGE_VALUE 10&#xD;effect_amount SET_ATTRIBUTE HOUSE_F ATTR_STORAGE_VALUE 15&#xD;effect_amount SET_ATTRIBUTE HOUSE_C ATTR_STORAGE_VALUE 20&#xD;effect_amount SET_ATTRIBUTE HOUSE_I ATTR_STORAGE_VALUE 25</Example3>
+  </Node>
+
+  <Node Name="effect_percent" Location="PLAYER_SETUP" Type="Property" GameVersion="UP/DE">
+    <ExternalReference1 Link="http://aok.heavengames.com/cgi-bin/forums/display.cgi?action=ct&amp;f=4,44466,0,365">UserPatch Effects Guide</ExternalReference1>
+    <Argument1 Name="EffectType">effect constant (see: Effect Constants in global documentation)</Argument1>
+    <Argument2 Name="Type">object/resource/technology/effect constant (see: Objects, Resource Constants, Technology Constants, Miscellaneous Constants, Class Constants, Advanced Genie Editor in global documentation)</Argument2>
+    <Argument3 Name="AttributeType">attribute constant (see: Attribute Constants in global documentation)</Argument3>
+    <Argument4 Name="%">number</Argument4>
+    <Description>
+      Same as effect_amount but this one is percentage-based.  In other words the specified value is divided by 100 so that you can get decimal values.
+    </Description>
+    <Example1 Description="Add 0.3 speed to all villagers (30/100 = 0.3)">#const ADD_ATTRIBUTE 4&#xD;#const ATTR_MOVE_SPEED 5&#xD;#const VILLAGER_CLASS 904&#xD;&lt;PLAYER_SETUP&gt;&#xD;effect_percent ADD_ATTRIBUTE VILLAGER_CLASS ATTR_MOVE_SPEED 30</Example1>
+  </Node>
+
+  <Node Name="guard_state" Location="PLAYER_SETUP" Type="Property" GameVersion="UP (referred to in the DE strings, but is not functional in DE)">
+    <Argument1 Name="ObjectType">object constant or class constant (see: Objects, Class Constants in global documentation)&#xD;for villagers use VILLAGER_CLASS instead of VILLAGER</Argument1>
+    <Argument2 Name="ResourceType">resource amount constant (see: Resource Constants in global documentation)</Argument2>
+    <Argument3 Name="ResourceDelta">number (default: 0)</Argument3>
+    <Argument4 Name="Flags">number (0-7) (default: 0)&#xD;0: no flags&#xD;1: lose if you do not control the specified ObjectType&#xD;2: activate a resource trickle of the UpResourceType at the level of ResourceDelta/100, as long as you control ObjectType&#xD;4: invert the ObjectType requirement for the other flags&#xD;add the values to apply multiple flags</Argument4>
+    <Description>
+      Set up additional lose conditions and/or resource trickles based on controlling or not controlling a specified object.
+    </Description>
+    <AdditionalInfo1>Only one guard_state command can be active in your script!</AdditionalInfo1>
+    <AdditionalInfo2>If used, !G will be appended to the map name in the Objectives window, along with the guard state details</AdditionalInfo2>
+    <Example1 Description="Activate a guardsate on the king, to make a map regicide even in other game modes.">#const AMOUNT_GOLD 3&#xD;&lt;PLAYER_SETUP&gt;&#xD;guard_state KING AMOUNT_GOLD 0 1</Example1>
+    <Example2 Description="Slowly drain a player's food while they do not control the monument.">#const AMOUNT_FOOD 0&#xD;&lt;PLAYER_SETUP&gt;&#xD;guard_state MONUMENT AMOUNT_FOOD -5 6</Example2>
+    <Example2 Description="Enable a small, relic-style gold trickle and configure players to be defeated if all villagers are lost.">#const AMOUNT_GOLD 3&#xD;#const VILLAGER_CLASS 904&#xD;&lt;PLAYER_SETUP&gt;&#xD;guard_state VILLAGER_CLASS AMOUNT_GOLD 10 3</Example2>
+  </Node>
+
+  <Node Name="terrain_state" Location="PLAYER_SETUP" Type="Property" GameVersion="UP">
+    <Argument1 Name="Mode">number (0) (default: 0)</Argument1>
+    <Argument2 Name="Parameter1">number (0) (default: 0)</Argument2>
+    <Argument3 Name="Parameter2">number (0) (default: 0)</Argument3>
+    <Argument4 Name="Flags">number (0-7) (default: 0)&#xD;0: no flags&#xD;1: enable building on shallows; also allows resources to be placed on shallows&#xD;2: thinner blending of shallows and beach terrain&#xD;4: changes ice blending to use shallows-style blending&#xD;add the values to apply multiple flags</Argument4>
+    <Description>
+      Changes the shallows terrain to allow it to be buildable.  Can also be used to modify shallows and ice blending properties.  There may be further unknown and undocumented functionality.
+    </Description>
+    <AdditionalInfo1>Parameters 1 and 2 are unimplemented as far as we currently know, and the only known mode is 0, so just set the first three numbers to 0 if you use this command.</AdditionalInfo1>
+    <Example1 Description="Activate all flags to allow for buildable shallows with alternate blending">&lt;PLAYER_SETUP&gt;&#xD;terrain_state 0 0 0 7</Example1>
+  </Node>
+
+  <Node Name="set_gaia_civilization" Location="PLAYER_SETUP" Type="Property" GameVersion="DE">
+    <Argument1 Name="CivNumber">number (0-37) (default: 0)  (see: Civilizations in global documentation)</Argument1>
+    <Description>
+      Set the civilization for gaia to use.  This will affect the architectural style of any gaia buildings, and the appearance of any units that have regional variations.
+    </Description>
+    <AdditionalInfo1>The default in DE uses the Briton's appearance.</AdditionalInfo1>
+    <AdditionalInfo2>This command can be used anywhere in your script. Player setup seems like an appropriate place to put it, so it has been listed here.</AdditionalInfo2>
+    <AdditionalInfo2>Also affects gaia's upgrades, civ bonuses and unique techs (relevant for battle royale)</AdditionalInfo2>
+    <AdditionalInfo2>If used multiple times, only the final instance will apply.</AdditionalInfo2>
+    <AdditionalInfo2>Does not work in the scenario editor.</AdditionalInfo2>
+    <Example1 Description="Create a Lithuanian monument for gaia somewhere on the map">set_gaia_civilization 35&#xD;&lt;OBJECTS_GENERATION&gt;&#xD;create_object MONUMENT</Example1>
+  </Node>
+
+  <Node Name="behavior_version" Location="PLAYER_SETUP" Type="Property" GameVersion="DE">
+    <Argument1 Name="VersionNumber">number (0-1) (default: 0)&#xD;0 is classic behavior, and is the default&#xD;1 is new behavior</Argument1>
+    <Description>Changes land generation such that when specifying number_of_tiles, the square amount covered by the base_size is included in the total, rather than being additive. Also fixes a bug where land order would influence the generation.</Description>
+    <AdditionalInfo1>This command can be used anywhere in your script. Player setup seems like an appropriate place to put it, so it has been listed here.</AdditionalInfo1>
+    <AdditionalInfo2>May be used in the future to gate off more fixes and changes that might break backwards compatibility.</AdditionalInfo2>
+    <AdditionalInfo3>To update an old map, you must increase number_of_tiles by (1+base_size*2)² to get the same number of tiles as you previously had.&#xD;(You also should increase any sub-100 land_percent)</AdditionalInfo3>
+    <Example1 Description="Activate new land generation behavior in your script and observe that your lands get smaller">behavior_version 1&#xD;&lt;LAND_GENERATION&gt;&#xD;create_player_lands {&#xD;    terrain_type DLC_BLACK&#xD;    number_of_tiles 250&#xD;    base_size 12&#xD;}</Example1>
+  </Node>
+  
+  <!--LAND_GENERATION Section-->
+  <Node Name="LAND_GENERATION" Location="LAND_GENERATION" Type="Section header" GameVersion="All">
+    <ExternalReference1 Link="https://cdn.discordapp.com/attachments/488354198480617475/535772481215135754/LandStyles_explained_jan19.docx">Land Generation in Age of Empires II</ExternalReference1>
+    <Description>
+      Place large areas of terrain, including the player starting areas. Required if you want to place players. Land origins (square bases) are placed in order. After that, all lands "grow" at the same time from their origins outwards to fill the amount of space specified for each land.
+    </Description>
+  </Node>
+
+  <Node Name="base_terrain" Location="LAND_GENERATION" Type="Property" GameVersion="All">
+    <Argument1 Name="TerrainType">terrain constant (see: Terrains in global documentation) (default: GRASS)</Argument1>
+    <Description>
+      Specify a terrain to initially fill the map. Maps with rivers going through them or oceans on the outside usually use water. Maps with forest on the outside usually use a forest terrain.
+    </Description>
+    <Example1 Description="Fill the map with water">&lt;LAND_GENERATION&gt;&#xD;base_terrain WATER</Example1>
+  </Node>
+
+  <Node Name="base_layer" Location="LAND_GENERATION" Type="Property" GameVersion="DE">
+    <Argument1 Name="argument_1_name">argument_1_description</Argument1>
+    <Description>
+      Specify a terrain to layer on top of the map's base_terrain.  This layered terrain is visual only, and does not confer any terrain properties or object restrictions.
+    </Description>
+    <AdditionalInfo1>Must be used AFTER base_terrain.</AdditionalInfo1>
+    <AdditionalInfo2>If used, you must specify the same base_layer in create_elevation, should you want to generate elevation on the map base terrain.</AdditionalInfo2>
+    <Example1 Description="Initially fill the map with dirt3, and layer snow on top of that">&lt;LAND_GENERATION&gt;&#xD;base_terrain DIRT3&#xD;base_layer SNOW</Example1>
+  </Node>
+
+  <Node Name="enable_waves" Location="LAND_GENERATION" Type="Property" GameVersion="DE">
+    <Argument1 Name="ShowWaves">boolean (1 or 0) (default: 1)</Argument1>
+    <Description>
+      Enabled by default, so you only need to include it if you want to disable animated beach waves on your map.  Waves are only visible if the player has "Render Beach Waves" checked in the game settings.
+    </Description>
+    <Example1 Description="Disable beach waves">&lt;LAND_GENERATION&gt;&#xD;enable_waves 0</Example1>
+  </Node>
+
+  <Node Name="create_player_lands" Location="LAND_GENERATION" Type="Command" GameVersion="All">
+    <Description>
+      Creates a land for every player.
+    </Description>
+    <AdditionalInfo1>Usually this command is used only once, but it can be repeated to, for example, give every player two starting towns.</AdditionalInfo1>
+    <AdditionalInfo2>Not required. You can use create_land with the assign_to_player or assign_to attributes to give lands directly to individual players instead (or in addition to creating player lands).</AdditionalInfo2>
+    <AdditionalInfo3>If you do not give players any lands at all, you cannot give them any starting units or resources. They will start at an entirely random location with only a town center, villagers and scout. This is NOT recommended.</AdditionalInfo3>
+    <Bug1>(DE): using direct_placement with create_player_lands breaks land positioning, so this is usually not desirable.</Bug1>
+    <Example1 Description="Create player lands made of dirt">&lt;LAND_GENERATION&gt;&#xD;create_player_lands {&#xD;    terrain_type DIRT&#xD;    land_percent 20&#xD;}</Example1>
+  </Node>
+
+  <Node Name="create_land" Location="LAND_GENERATION" Type="Command" GameVersion="All">
+    <Description>Create a single non-player (neutral) land.</Description>
+    <AdditionalInfo1>Can be assigned to a player with assign_to_player or assign_to</AdditionalInfo1>
+    <Example1 Description="Create a lake in the center">&lt;LAND_GENERATION&gt;&#xD;create_land {&#xD;    terrain_type WATER&#xD;    land_percent 10&#xD;    land_position 50 50&#xD;}</Example1>
+  </Node>
+
+  <Node Name="terrain_type" Location="LAND_GENERATION\Command" Type="Property" GameVersion="All">
+    <Argument1 Name="TerrainType">terrain constant (see: Terrains in global documentation) (default: GRASS)</Argument1>
+    <Description>
+      Specify which terrain the land should have.
+    </Description>
+    <Example1 Description="Create player lands made of dirt">&lt;LAND_GENERATION&gt;&#xD;create_player_lands {&#xD;    terrain_type DIRT&#xD;    land_percent 20&#xD;}</Example1>
+  </Node>
+
+  <Node Name="land_percent" Location="LAND_GENERATION\Command" Type="Property" GameVersion="All">
+    <Incompatibility1>number_of_tiles</Incompatibility1>
+    <Argument1 Name="%">number (0-100) (default: 100)</Argument1>
+    <Description>
+      Percentage of the total map that the land should grow to cover.
+    </Description>
+    <AdditionalInfo1>If land growth is constrained by borders or other lands, lands may be smaller than specified.</AdditionalInfo1>
+    <AdditionalInfo2>For player lands (create_player_lands) the percentage is divided equally between all players.</AdditionalInfo2>
+    <Example1 Description="Allocate 20% total of the map toward player lands">&lt;LAND_GENERATION&gt;&#xD;create_player_lands {&#xD;    terrain_type DIRT&#xD;    land_percent 20&#xD;}</Example1>
+  </Node>
+
+  <Node Name="number_of_tiles" Location="LAND_GENERATION\Command" Type="Property" GameVersion="All">
+    <Incompatibility1>land_percent</Incompatibility1>
+    <Argument1 Name="Amount">number (default: land_percent 100)</Argument1>
+    <Description>Fixed number of tiles that the land should grow by.</Description>
+    <AdditionalInfo1>Total size of the land is number_of_tiles in addition to the square origin specified by base_size (When using behavior_version 1, the square origin is included in the total number_of_tiles, resulting in smaller lands, unless compensated for.)</AdditionalInfo1>
+    <AdditionalInfo2>For player lands (create_player_lands) each player is given the specified number of tiles.</AdditionalInfo2>
+    <Example1 Description="Give every player 300 tiles">&lt;LAND_GENERATION&gt;&#xD;create_player_lands {&#xD;    terrain_type DIRT&#xD;    number_of_tiles 300&#xD;}</Example1>
+  </Node>
+
+  <Node Name="base_size" Location="LAND_GENERATION\Command" Type="Property" GameVersion="All">
+    <Argument1 Name="Radius">number (default: 3)</Argument1>
+    <Description>Square radius of the initially placed land origin, before any growth.</Description>
+    <AdditionalInfo1>The default of 3 results in a 7x7 land origin (49 tiles total).</AdditionalInfo1>
+    <AdditionalInfo2>base_size will produce a perfect square if used with land_percent 0 or number_of_tiles 0.</AdditionalInfo2>
+    <AdditionalInfo3>base_size is the minimum distance that a land will be placed from the edge of the map.</AdditionalInfo3>
+    <AdditionalInfo4>Land bases are placed sequentially, so if they are large and overlap, the land placed last will be the one visible in the overlapping region.</AdditionalInfo4>
+    <AdditionalInfo5>Non-player land bases will not overlap with each other, unless...</AdditionalInfo5>
+    <AdditionalInfo6>If base_size for non-player lands is too large, the land will fail to find a valid position and will be placed at the center of the map, overlapping any other lands at the center.</AdditionalInfo6>
+    <Example1 Description="Create a 13x13 square of ice">&lt;LAND_GENERATION&gt;&#xD;create_land {&#xD;    terrain_type ICE&#xD;    base_size 6&#xD;    number_of_tiles 0&#xD;}</Example1>
+  </Node>
+
+  <Node Name="land_position" Location="LAND_GENERATION\Command" Type="Property" GameVersion="All">
+    <Argument1 Name="%X">number (useful range 0-100) (default: random)&#xD;X is the axis running from the bottom-left edge to top-right</Argument1>
+    <Argument2 Name="%Y">number (useful range 0-99) (default: random)&#xD;Y is the axis running from the top-left edge to bottom-right&#xD; /!\ Note that 100 for the Y coordinate (or anything outside the map) will crash the game if your map uses &lt;CONNECTION_GENERATION&gt; and has a connection that needs to reach this land specifically.</Argument2>
+    <Description>
+      Specify the exact origin point for a land, as a percentage of total map dimensions.
+    </Description>
+    <AdditionalInfo1>land_position 50 50 is the center of the map</AdditionalInfo1>
+    <AdditionalInfo2>Ignores border restrictions</AdditionalInfo2>
+    <AdditionalInfo3>If placed outside of specified borders, the land will not grow beyond its base_size</AdditionalInfo3>
+    <AdditionalInfo4>Disabled for create_player_lands</AdditionalInfo4>
+    <AdditionalInfo5>Disabled when using assign_to_player or assign_to for create_land, unless direct_placement is specified in &lt;PLAYER_SETUP&gt;></AdditionalInfo5>
+    <Example1 Description="Create a lake in the center of the map">&lt;LAND_GENERATION&gt;&#xD;create_land {&#xD;    terrain_type WATER&#xD;    land_percent 10&#xD;    land_position 50 50&#xD;}</Example1>
+  </Node>
+
+  <Node Name="circle_radius" Location="LAND_GENERATION\Command" Type="Property" GameVersion="DE">
+    <ExternalReference1 Link="https://www.forgottenempires.net/age-of-empires-ii-definitive-edition/rms-features">Official DE Documentation</ExternalReference1>
+    <Argument1 Name="%Radius">number (1-50)&#xD;It is a percentage of map width&#xD;0 will disable circle_radius&#xD;The standard radius for unconstrained lands is probably around 40&#xD;Values larger than 50 will tend to force players towards the extreme edges and corners of the map</Argument1>
+    <Argument2 Name="Variance">number (default: 0)&#xD;0 is a perfect circle with no variance&#xD;20 seems to be close to the standard amount of variance when not using circle_radius&#xD;Very large values will tend to force players towards the corners of the map</Argument2>
+    <Description>
+      Used in create_player_lands to position the player lands in a circle with equal distance to the center, with specified variance.
+    </Description>
+    <AdditionalInfo1>Circle radius ignores any specified borders when placing the land origins, but land growth will still be constrained by borders.</AdditionalInfo1>
+    <AdditionalInfo2>There is also a command called circle_placement which is used in the standard maps and listed in the official documentation. This command does nothing at all.</AdditionalInfo2>
+    <AdditionalInfo3>If used for multiple unique create_player_lands commands, only the final radius will apply.</AdditionalInfo3>
+    <AdditionalInfo4>If used for create_land, it will still apply to player lands normally.</AdditionalInfo4>
+    <Example1 Description="example_1_description">&lt;LAND_GENERATION&gt;&#xD;create_player_lands {&#xD;    terrain_type DIRT&#xD;    number_of_tiles 100&#xD;    circle_radius 20 0&#xD;}</Example1>
+  </Node>
+
+  <Node Name="left_border" Location="LAND_GENERATION\Command" Type="Property" GameVersion="All">
+    <ExternalReference1 Link="http://aok.heavengames.com/cgi-bin/forums/display.cgi?action=ct&amp;f=28,42496,0,365">RMS Border Bugs Exposed</ExternalReference1>
+    <Argument1 Name="%">number (0-97) (default: 0)</Argument1>
+    <Description>Specify a percentage of map width for land placement and growth to stay away from the south-west border.</Description>
+    <AdditionalInfo1>There is a hard-coded feature that makes lands look like octagons instead of squares when constrained by borders.</AdditionalInfo1>
+    <AdditionalInfo2>Negative values can be used, as long as the land origin stays inside the map.  To ensure this, do one of the following:&#xD;    -Specify a land_position within the map&#xD;    -Specify a sufficiently large base size (this may require manually scaling of base_size with map size)</AdditionalInfo2>
+    <AdditionalInfo3>Borders shift the entire circle for player lands</AdditionalInfo3>
+    <AdditionalInfo4>You cannot have multiple rings of player lands with different borders; they will all be in the same circle</AdditionalInfo4>
+    <Bug1>Asymmetric borders for player lands can cause issues when the top_border is larger than other borders (External reference: RMS Border Bugs Exposed).  Avoid this by always using another border along with top_border when creating player lands.</Bug1>
+    <Example1 Description="Place players in the top corner of the map.">&lt;LAND_GENERATION&gt;&#xD;create_player_lands {&#xD;    terrain_type DIRT&#xD;    land_percent 100&#xD;    bottom_border 60&#xD;    left_border 60&#xD;}</Example1>
+  </Node>
+
+  <Node Name="right_border" Location="LAND_GENERATION\Command" Type="Property" GameVersion="All">
+    <ExternalReference1 Link="http://aok.heavengames.com/cgi-bin/forums/display.cgi?action=ct&amp;f=28,42496,0,365">RMS Border Bugs Exposed</ExternalReference1>
+    <Argument1 Name="%">number (0-97) (default: 0)</Argument1>
+    <Description>Specify a percentage of map width for land placement and growth to stay away from the north-east border.</Description>
+    <AdditionalInfo1>There is a hard-coded feature that makes lands look like octagons instead of squares when constrained by borders.</AdditionalInfo1>
+    <AdditionalInfo2>Negative values can be used, as long as the land origin stays inside the map.  To ensure this, do one of the following:&#xD;    -Specify a land_position within the map&#xD;    -Specify a sufficiently large base size (this may require manually scaling of base_size with map size)</AdditionalInfo2>
+    <AdditionalInfo3>Borders shift the entire circle for player lands</AdditionalInfo3>
+    <AdditionalInfo4>You cannot have multiple rings of player lands with different borders; they will all be in the same circle</AdditionalInfo4>
+    <Bug1>Asymmetric borders for player lands can cause issues when the top_border is larger than other borders (External reference: RMS Border Bugs Exposed).  Avoid this by always using another border along with top_border when creating player lands.</Bug1>
+    <Example1 Description="Place players in the top corner of the map.">&lt;LAND_GENERATION&gt;&#xD;create_player_lands {&#xD;    terrain_type DIRT&#xD;    land_percent 100&#xD;    bottom_border 60&#xD;    left_border 60&#xD;}</Example1>
+  </Node>
+
+  <Node Name="top_border" Location="LAND_GENERATION\Command" Type="Property" GameVersion="All">
+    <ExternalReference1 Link="http://aok.heavengames.com/cgi-bin/forums/display.cgi?action=ct&amp;f=28,42496,0,365">RMS Border Bugs Exposed</ExternalReference1>
+    <Argument1 Name="%">number (0-97) (default: 0)</Argument1>
+    <Description>Specify a percentage of map width for land placement and growth to stay away from the north-west border.</Description>
+    <AdditionalInfo1>There is a hard-coded feature that makes lands look like octagons instead of squares when constrained by borders.</AdditionalInfo1>
+    <AdditionalInfo2>Negative values can be used, as long as the land origin stays inside the map.  To ensure this, do one of the following:&#xD;    -Specify a land_position within the map&#xD;    -Specify a sufficiently large base size (this may require manually scaling of base_size with map size)</AdditionalInfo2>
+    <AdditionalInfo3>Borders shift the entire circle for player lands</AdditionalInfo3>
+    <AdditionalInfo4>You cannot have multiple rings of player lands with different borders; they will all be in the same circle</AdditionalInfo4>
+    <Bug1>Asymmetric borders for player lands can cause issues when the top_border is larger than other borders (External reference: RMS Border Bugs Exposed).  Avoid this by always using another border along with top_border when creating player lands.</Bug1>
+    <Example1 Description="Place players in the top corner of the map.">&lt;LAND_GENERATION&gt;&#xD;create_player_lands {&#xD;    terrain_type DIRT&#xD;    land_percent 100&#xD;    bottom_border 60&#xD;    left_border 60&#xD;}</Example1>
+  </Node>
+
+  <Node Name="bottom_border" Location="LAND_GENERATION\Command" Type="Property" GameVersion="All">
+    <ExternalReference1 Link="http://aok.heavengames.com/cgi-bin/forums/display.cgi?action=ct&amp;f=28,42496,0,365">RMS Border Bugs Exposed</ExternalReference1>
+    <Argument1 Name="%">number (0-97) (default: 0)</Argument1>
+    <Description>Specify a percentage of map width for land placement and growth to stay away from the south-east border.</Description>
+    <AdditionalInfo1>There is a hard-coded feature that makes lands look like octagons instead of squares when constrained by borders.</AdditionalInfo1>
+    <AdditionalInfo2>Negative values can be used, as long as the land origin stays inside the map.  To ensure this, do one of the following:&#xD;    -Specify a land_position within the map&#xD;    -Specify a sufficiently large base size (this may require manually scaling of base_size with map size)</AdditionalInfo2>
+    <AdditionalInfo3>Borders shift the entire circle for player lands</AdditionalInfo3>
+    <AdditionalInfo4>You cannot have multiple rings of player lands with different borders; they will all be in the same circle</AdditionalInfo4>
+    <Bug1>Asymmetric borders for player lands can cause issues when the top_border is larger than other borders (External reference: RMS Border Bugs Exposed).  Avoid this by always using another border along with top_border when creating player lands.</Bug1>
+    <Example1 Description="Place players in the top corner of the map.">&lt;LAND_GENERATION&gt;&#xD;create_player_lands {&#xD;    terrain_type DIRT&#xD;    land_percent 100&#xD;    bottom_border 60&#xD;    left_border 60&#xD;}</Example1>
+  </Node>
+
+  <Node Name="border_fuzziness" Location="LAND_GENERATION\Command" Type="Property" GameVersion="All">
+    <Argument1 Name="%BorderAdherence">number (0-100) (default: 20)</Argument1>
+    <Description>
+      Specifies the extent to which land growth respects borders and actually stops at a border.
+    </Description>
+    <AdditionalInfo1>Low values allow lands to exceed specified borders, giving ragged looking edges when land is constrained by borders.</AdditionalInfo1>
+    <AdditionalInfo2>0 causes land growth to ignore borders entirely.</AdditionalInfo2>
+    <AdditionalInfo3>100 (or any negative value) means that borders are fully respected, resulting in perfectly straight lands along borders.</AdditionalInfo3>
+    <Example1 Description="Central desert with very fuzzy borders">&lt;LAND_GENERATION&gt;&#xD;create_land {&#xD;    terrain_type DESERT&#xD;    land_position 50 50&#xD;    land_percent 100&#xD;    left_border 40&#xD;    right_border 40&#xD;    top_border 40&#xD;    bottom_border 40&#xD;    border_fuzziness 2&#xD;}</Example1>
+  </Node>
+
+  <Node Name="clumping_factor" Location="LAND_GENERATION\Command" Type="Property" GameVersion="All">
+    <Argument1 Name="Factor">number (default: 8 - different than for terrains)&#xD;Useful range of about 0-100</Argument1>
+    <Description>
+      The extent to which land growth prefers to clump together near existing tiles.  High values create rounder lands, while low values create more elongated irregular lands.  Negative values create extremely snakey lands, and are generally not recommended.
+    </Description>
+    <Example1 Description="Create an irregularly shaped lake">&lt;LAND_GENERATION&gt;&#xD;create_land {&#xD;    terrain_type WATER&#xD;    land_percent 10&#xD;    clumping_factor 2&#xD;}</Example1>
+  </Node>
+
+  <Node Name="base_elevation" Location="LAND_GENERATION\Command" Type="Property" GameVersion="UP/HD/DE">
+    <Argument1 Name="Height">number (1-16) (default: 0 - not elevated)&#xD;In UP/HD elevations higher than 7 should not be used, because objects will fail to render properly.&#xD;In DE, elevations higher than 16 may cause terrain rendering issues for certain (ie. smaller) screen resolutions.&#xD;Negative values maximally elevate a land (not recommended due to rendering issues)</Argument1>
+    <Description>Elevate the entire land to the specified height.</Description>
+    <AdditionalInfo1>Requires &lt;ELEVATION_GENERATION&gt; section (even empty) to work</AdditionalInfo1>
+    <AdditionalInfo2>In HD/DE this will not work for lands with a water terrain_type</AdditionalInfo2>
+    <AdditionalInfo3>Up to a height of 9 the surrounding terrains will contain the slope, with even higher values, the remaining elevation occurs within the confines of the land</AdditionalInfo3>
+    <Example1 Description="Create a palm desert land with elevation 2.">&lt;LAND_GENERATION&gt;&#xD;create_land {&#xD;    terrain_type PALM_DESERT&#xD;    number_of_tiles 128&#xD;    base_elevation 2&#xD;}&#xD;&lt;ELEVATION_GENERATION&gt;</Example1>
+  </Node>
+
+  <Node Name="assign_to_player" Location="LAND_GENERATION\Command" Type="Property" GameVersion="All">
+    <Incompatibility1>assign_to</Incompatibility1>
+    <Argument1 Name="PlayerNumber">number (1-8) (default: not assigned to any players)</Argument1>
+    <Description>
+      Assign a land created with create_land to one specific player, allowing you to place starting objects on that land for that player.
+    </Description>
+    <AdditionalInfo1>Refers to lobby order -  the first person in the lobby is player 1, even if they are not blue.</AdditionalInfo1>
+    <AdditionalInfo2>If you want to support 8 players, you must individually assign lands to all 8 players.</AdditionalInfo2>
+    <AdditionalInfo3>Lands assigned to players who are not playing will not be created.</AdditionalInfo3>
+    <AdditionalInfo4>All lands belonging to players will be in a circle, and land_position will be ignored, unless direct_placement is specified in &lt;PLAYER_SETUP&gt;</AdditionalInfo4>
+    <Example1 Description="Assign a desert land to player 1">&lt;LAND_GENERATION&gt;&#xD;create_land {&#xD;    terrain_type DESERT&#xD;    land_percent 3&#xD;    assign_to_player 1&#xD;}</Example1>
+  </Node>
+
+  <Node Name="assign_to" Location="LAND_GENERATION\Command" Type="Property" GameVersion="UP/DE">
+    <Incompatibility1>assign_to_player</Incompatibility1>
+    <Argument1 Name="AssignTarget">AssignTargetConstant (see Global documentation) (default: not assigned to any players)&#xD;Options are AT_PLAYER, AT_COLOR, AT_TEAM</Argument1>
+    <Argument2 Name="Number">varies depending on the AssignTarget&#xD;  - AT_PLAYER (1-8) - player number (refers to lobby order)&#xD;  - AT_COLOR (1-8) - player color&#xD;  - AT_TEAM (-10, -4,-3,-2,-1,0,1,2,3,4) - team number (refers to lobby order, not the number chosen by the team).  Gives the land to a player from the specified team.&#xD;    + 0 is for un-teamed players&#xD;    + negative values target a player NOT on the specified team&#xD;    + -10 gives the land to any player</Argument2>
+    <Argument3 Name="Mode">number (-1, 0)&#xD;  0 is for random selection (only matters for AT_TEAM)&#xD;  -1 is for ordered selection (only matters for AT_TEAM)</Argument3>
+    <Argument4 Name="Flags">number (0-3)&#xD;  0: no flags&#xD;  1: reset players who have already been assigned before starting&#xD;  2: do not remember assigning this player&#xD;  3: apply the effects of both 1 and 2</Argument4>
+    <Description>
+      Assign a land created with create_land to one specific player, allowing you to place starting objects on that land for that player.
+    </Description>
+    <AdditionalInfo1>If you want to support 8 players, you must individually assign lands for all players.</AdditionalInfo1>
+    <AdditionalInfo2>Lands assigned to players who are not playing will not be created.</AdditionalInfo2>
+    <AdditionalInfo3>All lands belonging to players will be in a circle, and land_position will be ignored, unless direct_placement is specified in &lt;PLAYER_SETUP&gt;</AdditionalInfo3>
+    <AdditionalInfo4>In DE and WK the AssignTargetConstants are predefined, but in vanilla UP they must be manually defined first:&#xD;  #const  AT_PLAYER 0&#xD;  #const  AT_COLOR 1&#xD;  #const  AT_TEAM 2</AdditionalInfo4>
+    <Example1 Description="Assign a new land at the map center to a random player on team 1.">#const AT_TEAM 2&#xD;&lt;PLAYER_SETUP&gt;&#xD;direct_placement&#xD;&lt;LAND_GENERATION&gt;&#xD;create_land {&#xD;    terrain_type DIRT&#xD;    number_of_tiles 128&#xD;    land_position 50 50&#xD;    assign_to AT_TEAM 1 0 0&#xD;}</Example1>
+  </Node>
+
+  <Node Name="zone" Location="LAND_GENERATION\Command" Type="Property" GameVersion="All">
+    <Incompatibility1>set_zone_by_team</Incompatibility1>
+    <Incompatibility2>set_zone_randomly</Incompatibility2>
+    <Argument1 Name="ZoneNumber">number</Argument1>
+    <Description>
+      Set a numeric zone.  Lands sharing the same zone can grow to touch each other.  If two lands have different zones, and other_zone_avoidance_distance is specified, land growth will avoid touching the other zone.
+    </Description>
+    <AdditionalInfo1>By default lands from create_player_lands are each in their own unique zone, while lands created with create_land all share the same zone.</AdditionalInfo1>
+    <AdditionalInfo2>Do not specify any zone if you want players to be on their own island.</AdditionalInfo2>
+    <Bug1>zone 99 will crash the game</Bug1>
+    <Example1 Description="All players are on the same continent, the rest of the map is water.">&lt;LAND_GENERATION&gt;&#xD;base_terrain WATER&#xD;create_player_lands {&#xD;    terrain_type DIRT&#xD;    land_percent 60&#xD;    zone 1&#xD;}</Example1>
+  </Node>
+
+  <Node Name="set_zone_by_team" Location="LAND_GENERATION\Command" Type="Property" GameVersion="All">
+    <Incompatibility1>zone</Incompatibility1>
+    <Incompatibility2>set_zone_randomly</Incompatibility2>
+    <Description>
+      For create_player_lands.  Assigns the same zone to all members of the same team.
+    </Description>
+    <AdditionalInfo1>If used with create_land, it will assign the land to the same zone as the team of player 1, even if the land is a non-player land or is the assigned land for a member of a different team.  So this is NOT recommended!</AdditionalInfo1>
+    <Example1 Description="Team Islands">&lt;LAND_GENERATION&gt;&#xD;base_terrain WATER&#xD;create_player_lands {&#xD;    terrain_type DIRT&#xD;    land_percent 80&#xD;    set_zone_by_team&#xD;    other_zone_avoidance_distance 10&#xD;    left_border 10 right_border 10 top_border 10 bottom_border 10&#xD;}</Example1>
+  </Node>
+
+  <Node Name="set_zone_randomly" Location="LAND_GENERATION\Command" Type="Property" GameVersion="All">
+    <Incompatibility1>zone</Incompatibility1>
+    <Incompatibility2>set_zone_by_team</Incompatibility2>
+    <Description>
+      Lands with this attribute will randomly share zones with other lands.  They will not share a zone with a land that is specifically given a numeric zone, but they may share a zone with a land that has random zone assignment, that has no form of zone assignment, or that has team zones assigned.
+    </Description>
+    <Example1 Description="Archipelago-styled map where players might be on the same island with allies, enemies or nobody.">&lt;LAND_GENERATION&gt;&#xD;base_terrain WATER&#xD;create_player_lands {&#xD;    terrain_type DIRT&#xD;    land_percent 80&#xD;    set_zone_randomly&#xD;    other_zone_avoidance_distance 10&#xD;    left_border 10 right_border 10 top_border 10 bottom_border 10&#xD;}</Example1>
+  </Node>
+
+  <Node Name="other_zone_avoidance_distance" Location="LAND_GENERATION\Command" Type="Property" GameVersion="All">
+    <Argument1 Name="Tiles">number (default: 0)</Argument1>
+    <Description>
+      Number of tiles away from a land of with different zone to stop land growth.  Used to create river maps and island maps.
+    </Description>
+    <AdditionalInfo1>To keep two lands separated, both lands must have this attribute.</AdditionalInfo1>
+    <AdditionalInfo2>When different values are used for two lands, the smaller one applies.</AdditionalInfo2>
+    <AdditionalInfo3>This attribute only applies to land growth.  Land origins/bases may end up closer together or even touching if base_size is large and/or many players are crammed on a small map.</AdditionalInfo3>
+    <Example1 Description="A rivers map where all players are separated by water, and there is a neutral island in the center.">&lt;LAND_GENERATION&gt;&#xD;base_terrain WATER&#xD;create_player_lands {&#xD;    terrain_type GRASS&#xD;    land_percent 100&#xD;    other_zone_avoidance_distance 10&#xD;}&#xD;create_land {&#xD;    terrain_type DIRT&#xD;    land_percent 100&#xD;    land_position 50 50&#xD;    zone 1&#xD;    other_zone_avoidance_distance 10&#xD;}</Example1>
+  </Node>
+
+  <Node Name="min_placement_distance" Location="LAND_GENERATION\Command" Type="Property" GameVersion="All">
+    <Argument1 Name="Tiles">number (default: 0) </Argument1>
+    <Description>
+      Number of tiles to stay away from the origins of previously created lands when randomly selecting an origin for this land.  Previously undocumented and almost never used.
+    </Description>
+    <AdditionalInfo1>If too large of a value is specified and the land cannot find a valid position, it will be placed in the center.</AdditionalInfo1>
+    <AdditionalInfo2>No effect on player lands.</AdditionalInfo2>
+    <AdditionalInfo3>No effect when land_position is specified.</AdditionalInfo3>
+    <Example1 Description="Create a land with buggy placement that ends up in the center because the min_placement_distance is too large">&lt;LAND_GENERATION&gt;&#xD;create_land {&#xD;    terrain_type DESERT&#xD;    land_percent 1&#xD;    min_placement_distance 500&#xD;}</Example1>
+  </Node>
+
+  <Node Name="land_id" Location="LAND_GENERATION\Command" Type="Property" GameVersion="All">
+    <Argument1 Name="Identifier">number (default: no id)&#xD;land_id -9 should not be used, because it assigns the land to gaia</Argument1>
+    <Description>
+      Assign a numeric label to a land, which can later be used to place objects specifically on that land with place_on_specific_land_id.  Unrelated to any zone numbers.
+    </Description>
+    <AdditionalInfo1>Multiple lands can have the same ID.  In this case, the objects will be placed on all of them.</AdditionalInfo1>
+    <AdditionalInfo2>Must be used after assign_to_player / assign_to since they will reset the ID.</AdditionalInfo2>
+    <AdditionalInfo3>Can theoretically be used for create_player_lands, but will disable the ability to use set_place_for_every_player for object placement, so is not recommended.</AdditionalInfo3>
+    <AdditionalInfo4>Note that objects may be placed on surrounding terrain rather than the land itself, if the surrounding terrain is something the object can be placed on.</AdditionalInfo4>
+    <Example1 Description="Create a tiny snowy land and place a gold mine on it.">&lt;LAND_GENERATION&gt;&#xD;base_terrain WATER&#xD;create_player_lands {&#xD;    terrain_type DIRT&#xD;    land_percent 0&#xD;}&#xD;create_land {&#xD;    terrain_type SNOW&#xD;    land_percent 0&#xD;    land_id 13&#xD;    land_position 50 50&#xD;}&#xD;&lt;OBJECTS_GENERATION&gt;&#xD;create_object GOLD {&#xD;    place_on_specific_land_id 13&#xD;}</Example1>
+  </Node>
+  
+  <!--ELEVATION_GENERATION Section-->
+  <Node Name="ELEVATION_GENERATION" Location="ELEVATION_GENERATION" Type="Section header" GameVersion="All">
+    <Description>
+      Optional section used to place hills on your map.
+    </Description>
+    <AdditionalInfo1>Elevation avoids the origins of player lands by about 9 tiles.</AdditionalInfo1>
+    <AdditionalInfo2>If base_elevation was specified for any lands, you must include this section, even if it is empty.</AdditionalInfo2>
+    <AdditionalInfo2>Elevation provides a combat bonus to higher units, and a debuff to lower units.</AdditionalInfo2>
+    <AdditionalInfo2>Hill positions are noticeably biased towards being placed in the south.  In DE, you should always use enable_balanced_elevation to remove this bias.</AdditionalInfo2>
+  </Node>
+
+  <Node Name="create_elevation" Location="ELEVATION_GENERATION" Type="Command" GameVersion="All">
+    <Argument1 Name="MaxHeight">number (1-7) (default: 0 - not elevated)</Argument1>
+    <Description>
+      Create one or more hills of random height, up to the given height.
+    </Description>
+    <AdditionalInfo1>When creating a single hill, this hill will always attempt to reach the height specified.</AdditionalInfo1>
+    <AdditionalInfo2>Hills with a small number of base tiles are not able to reach as high.</AdditionalInfo2>
+    <Example1 Description="Create one hill on grassy terrain.">&lt;ELEVATION_GENERATION&gt;&#xD;create_elevation 7 {&#xD;    base_terrain GRASS&#xD;    number_of_tiles 600&#xD;}</Example1>
+  </Node>
+
+  <Node Name="base_terrain" Location="ELEVATION_GENERATION\Command" Type="Property" GameVersion="All">
+    <Argument1 Name="TerrainType">terrain constant (see: Terrains in global documentation) (default: GRASS)</Argument1>
+    <Description>
+      Terrain on which the hill(s) should generate. If you have multiple terrains you want hills on, then you need multiple create_elevation commands.
+    </Description>
+    <AdditionalInfo1>Note that you only need to consider terrains from &lt;LAND_GENERATION&gt;, as &lt;TERRAIN_GENERATION&gt; occurs after elevation has already been placed.</AdditionalInfo1>
+    <Example1 Description="Create one hill on water terrain.">&lt;ELEVATION_GENERATION&gt;&#xD;create_elevation 7 {&#xD;    base_terrain WATER&#xD;    number_of_tiles 600&#xD;}</Example1>
+  </Node>
+
+  <Node Name="base_layer" Location="ELEVATION_GENERATION\Command" Type="Property" GameVersion="DE">
+    <Argument1 Name="TerrainType">terrain constant (see: Terrains in global documentation) (default: GRASS)</Argument1>
+    <Description>
+      Use this attribute in addition to base_terrain if (and only if) you specified a layer for the map base terrain at the beginning of &lt;LAND_GENERATION&gt;.
+    </Description>
+    <Example1 Description="Initially fill the map with dirt3, and layer snow on top of that. Then elevate that terrain.">&lt;LAND_GENERATION&lt;&#xD;base_terrain DIRT3&#xD;base_layer SNOW&#xD;&lt;ELEVATION_GENERATION&lt;&#xD;create_elevation 7 {&#xD;    base_terrain DIRT3&#xD;    base_layer SNOW&#xD;    number_of_tiles 9320&#xD;    number_of_clumps 20&#xD;}</Example1>
+  </Node>
+
+  <Node Name="number_of_tiles" Location="ELEVATION_GENERATION\Command" Type="Property" GameVersion="All">
+    <Argument1 Name="Amount">number (default: about 120 on tiny maps)</Argument1>
+    <Description>
+      Total base tile count allocated to this create_elevation command.  If number_of_clumps is specified, this value is divided equally among the clumps.
+    </Description>
+    <Example1 Description="Create one hill on grassy terrain.">&lt;ELEVATION_GENERATION&gt;&#xD;create_elevation 7 {&#xD;    base_terrain GRASS&#xD;    number_of_tiles 600&#xD;}</Example1>
+  </Node>
+
+  <Node Name="number_of_clumps" Location="ELEVATION_GENERATION\Command" Type="Property" GameVersion="All">
+    <Argument1 Name="Amount">number (default: 1)</Argument1>
+    <Description>
+      Number of individual hills to create.  If clumps are adjacent, the hills may merge.
+    </Description>
+    <Example1 Description="Create 4 hills of 100 tiles each.">&lt;ELEVATION_GENERATION&gt;&#xD;create_elevation 3 {&#xD;    base_terrain GRASS&#xD;    number_of_tiles 400&#xD;    number_of_clumps 4&#xD;}</Example1>
+  </Node>
+
+  <Node Name="set_scale_by_size" Location="ELEVATION_GENERATION\Command" Type="Property" GameVersion="All">
+    <Incompatibility1>set_scale_by_groups</Incompatibility1>
+    <Description>
+      Scales number_of_tiles to the map size.  Unscaled value refers to a 100x100 map (see: Map Sizes in global documentation for the scaling table)
+    </Description>
+    <AdditionalInfo1>If you see a script scaling by both size and groups, only the final attribute will apply!</AdditionalInfo1>
+    <AdditionalInfo2>If you want to scale elevation by both groups and size, you must do so manually using Conditionals.</AdditionalInfo2>
+    <Bug1>(AoC/UP/HD): the behavior of set_scale_by_size and set_scale_by_groups is inverted with each attribute scaling elevation as the other one should.  This bug is fixed in DE.</Bug1>
+    <Example1 Description="Create 4 hills which become larger on larger maps.  On a small map this will be 4 clumps with a total of 400*2.1 = 840 tiles.">&lt;ELEVATION_GENERATION&gt;&#xD;create_elevation 3 {&#xD;    base_terrain GRASS&#xD;    number_of_tiles 400&#xD;    number_of_clumps 4&#xD;    set_scale_by_size&#xD;}</Example1>
+  </Node>
+
+  <Node Name="set_scale_by_groups" Location="ELEVATION_GENERATION\Command" Type="Property" GameVersion="All">
+    <Incompatibility1>set_scale_by_size</Incompatibility1>
+    <Description>
+      Scales number_of_clumps to the map size.  Unscaled value refers to a 100x100 map (see: Map Sizes in global documentation for the scaling table)
+    </Description>
+    <AdditionalInfo1>If you see a script scaling by both size and groups, only the final attribute will apply!</AdditionalInfo1>
+    <AdditionalInfo2>Unlike for terrains, for elevation this attribute does NOT increase the total tile count.</AdditionalInfo2>
+    <AdditionalInfo3>If you want to scale elevation by both groups and size, you must do so manually using Conditionals.</AdditionalInfo3>
+    <Bug1>(AoC/UP/HD): the behavior of set_scale_by_size and set_scale_by_groups is inverted with each attribute scaling elevation as the other one should.  This bug is fixed in DE.</Bug1>
+    <Example1 Description="Create 400 tiles worth of hills, with the number of hills scaling to map size. On a small map this will be 4x2.1 = 8 clumps and a total of 400 tiles.">&lt;ELEVATION_GENERATION&gt;&#xD;create_elevation 4 {&#xD;    base_terrain GRASS&#xD;    number_of_tiles 400&#xD;    number_of_clumps 4&#xD;    set_scale_by_groups&#xD;}</Example1>
+  </Node>
+
+  <Node Name="spacing" Location="ELEVATION_GENERATION\Command" Type="Property" GameVersion="All">
+    <Argument1 Name="Amount">number (1+) (default: 1 - no spacing)</Argument1>
+    <Description>
+      Number of tiles between each elevation level.  Numbers larger than 1 will produce rings of flat terrain on each level of a hill.
+    </Description>
+    <Example1 Description="Create one large large hill with increased spacing.">&lt;ELEVATION_GENERATION&gt;&#xD;create_elevation 7 {&#xD;    base_terrain GRASS&#xD;    number_of_tiles 3000&#xD;    spacing 4&#xD;}</Example1>
+  </Node>
+
+  <Node Name="enable_balanced_elevation" Location="ELEVATION_GENERATION\Command" Type="Property" GameVersion="DE">
+    <Description>
+      Removes the bias of hill placement towards the bottom (south) of the map.  Default is disabled, so you should always include this attribute!
+    </Description>
+    <Example1 Description=" Spread a large number of hills fairly across the map. Remove enable_balanced_elevation to see the difference.">&lt;ELEVATION_GENERATION&gt;&#xD;create_elevation 7 {&#xD;    base_terrain GRASS&#xD;    number_of_tiles 9320&#xD;    number_of_clumps 9320&#xD;    enable_balanced_elevation&#xD;}&#xD;&lt;TERRAIN_GENERATION&gt;&#xD;create_terrain DESERT {&#xD;    base_terrain GRASS&#xD;    land_percent 100&#xD;    number_of_clumps 9320&#xD;    height_limits 1 7&#xD;}</Example1>
+  </Node>
+  
+  <!--CLIFF_GENERATION Section-->
+  <Node Name="CLIFF_GENERATION" Location="CLIFF_GENERATION" Type="Section header" GameVersion="All">
+    <ExternalReference1 Link="http://aok.heavengames.com/cgi-bin/forums/display.cgi?action=ct&amp;f=26,42261,,all">All about Cliffs</ExternalReference1>
+    <Description>
+      Optional section to include rocky impassible cliffs.
+    </Description>
+    <AdditionalInfo1>Cliffs avoid the origins of all lands by 22 tiles, and will not be placed on water terrains. They also avoid any slopes.</AdditionalInfo1>
+    <AdditionalInfo2>Simply typing the section header will generate default cliffs, so do not include it if you do not want cliffs! There are no create-commands in this section.</AdditionalInfo2>
+    <AdditionalInfo3>Cliffs create a terrain under themselves. This is terrain 16, and looks like the normal grass. This terrain turns into terrain 0 (GRASS) prior to &lt;OBJECTS_GENERATION&gt;</AdditionalInfo3>
+    <AdditionalInfo4>Cliffs provide a combat bonus to units shooting from the top of a cliff.</AdditionalInfo4>
+  </Node>
+
+  <Node Name="min_number_of_cliffs" Location="CLIFF_GENERATION" Type="Property" GameVersion="All">
+    <Argument1 Name="Amount">number (default: 3)&#xD;Make sure min does not exceed max.</Argument1>
+    <Description>
+      Set the minimum number of distinct cliffs to create.  The actual number of cliffs is chosen at random from between min and max inclusive.  Does not scale with map size, so you must do so manually using Conditionals.
+    </Description>
+    <Example1 Description="Create exactly 10 cliffs on your map.">&lt;CLIFF_GENERATION&gt;&#xD;min_number_of_cliffs 10&#xD;max_number_of_cliffs 10</Example1>
+  </Node>
+
+  <Node Name="max_number_of_cliffs" Location="CLIFF_GENERATION" Type="Property" GameVersion="All">
+    <Argument1 Name="Amount">number (default: 8)&#xD;Make sure min does not exceed max.</Argument1>
+    <Description>
+      Set the maximum number of distinct cliffs to create.  The actual number of cliffs is chosen at random from between min and max inclusive.  Does not scale with map size, so you must do so manually using Conditionals.
+    </Description>
+    <Example1 Description="Create exactly 10 cliffs on your map.">&lt;CLIFF_GENERATION&gt;&#xD;min_number_of_cliffs 10&#xD;max_number_of_cliffs 10</Example1>
+  </Node>
+
+  <Node Name="min_length_of_cliff" Location="CLIFF_GENERATION" Type="Property" GameVersion="All">
+    <Argument1 Name="Length">number (3+) (default: 5)</Argument1>
+    <Description>
+      Cliff lengths are chosen at random from between min and max (inclusive).  The unit is NOT tiles, but rather "cliff segments".
+    </Description>
+    <AdditionalInfo1>Length 3 is 12 tiles, 4 is 15 tiles, 5 is 18 tiles, etc.</AdditionalInfo1>
+    <AdditionalInfo2>Minimum must be at least 3 for cliffs to appear at all.</AdditionalInfo2>
+    <AdditionalInfo3>Cliffs may end up shorter than expected if they run out of space.</AdditionalInfo3>
+    <Example1 Description="Create 5-7 cliffs with lengths 12-18 tiles">&lt;CLIFF_GENERATION&gt;&#xD;min_number_of_cliffs 5&#xD;max_number_of_cliffs 7&#xD;min_length_of_cliff 3&#xD;max_length_of_cliff 5</Example1>
+  </Node>
+
+  <Node Name="max_length_of_cliff" Location="CLIFF_GENERATION" Type="Property" GameVersion="All">
+    <Argument1 Name="Length">number (3+) (default: 9)</Argument1>
+    <Description>
+      Cliff lengths are chosen at random from between min and max (inclusive).  The unit is NOT tiles, but rather "cliff segments".
+    </Description>
+    <AdditionalInfo1>Length 3 is 12 tiles, 4 is 15 tiles, 5 is 18 tiles, etc.</AdditionalInfo1>
+    <AdditionalInfo2>Minimum must be at least 3 for cliffs to appear at all.</AdditionalInfo2>
+    <AdditionalInfo3>Cliffs may end up shorter than expected if they run out of space.</AdditionalInfo3>
+    <Example1 Description="Create 5-7 cliffs with lengths 12-18 tiles">&lt;CLIFF_GENERATION&gt;&#xD;min_number_of_cliffs 5&#xD;max_number_of_cliffs 7&#xD;min_length_of_cliff 3&#xD;max_length_of_cliff 5</Example1>
+  </Node>
+  
+  <Node Name="cliff_curliness" Location="CLIFF_GENERATION" Type="Property" GameVersion="All">
+    <Argument1 Name="%">number (0-100) (default: 36)</Argument1>
+    <Description>
+      The chance that a cliff changes direction at each segment.  Use low values for straight cliffs and high values for curly cliffs.
+    </Description>
+    <Example1 Description="Create cliffs that are more curly than usual.">&lt;CLIFF_GENERATION&gt;&#xD;min_number_of_cliffs 10&#xD;max_number_of_cliffs 10&#xD;min_length_of_cliff 10&#xD;max_length_of_cliff 10&#xD;cliff_curliness 50</Example1>
+  </Node>
+
+  <Node Name="min_distance_cliffs" Location="CLIFF_GENERATION" Type="Property" GameVersion="All">
+    <Argument1 Name="Distance">number (default: 2)</Argument1>
+    <Description>
+      Minimum distance in "cliff units" between separate cliffs.
+    </Description>
+    <AdditionalInfo1>2 is 6 tiles, 1 is 3 tiles, 0 is 0 tiles, etc.</AdditionalInfo1>
+    <Example1 Description="Fill the map with cliffs that stay only 3 tiles from other cliffs.">&lt;CLIFF_GENERATION&gt;&#xD;min_number_of_cliffs 9999&#xD;max_number_of_cliffs 9999&#xD;min_distance_cliffs 1</Example1>
+  </Node>
+
+  <Node Name="min_terrain_distance" Location="CLIFF_GENERATION" Type="Property" GameVersion="All">
+    <Argument1 Name="Distance">number (default: 2)</Argument1>
+    <Description>
+      Minimum distance in "cliff units" that cliffs will avoid water terrains by.
+    </Description>
+    <AdditionalInfo1>2 is 6 tiles, 1 is 3 tiles, 0 is 0 tiles, etc.</AdditionalInfo1>
+    <AdditionalInfo2>Note that this only considers terrains from &lt;LAND_GENERATION&gt;, as &lt;TERRAIN_GENERATION&gt; occurs after cliffs have already been placed.</AdditionalInfo2>
+    <Example1 Description="example_1_description">&lt;CLIFF_GENERATION&gt;&#xD;base_terrain WATER&#xD;create_player_lands {&#xD;    terrain_type GRASS&#xD;    land_percent 100&#xD;    other_zone_avoidance_distance 10&#xD;}&#xD;&lt;CLIFF_GENERATION&gt;&#xD;min_number_of_cliffs 9999&#xD;max_number_of_cliffs 9999&#xD;min_distance_cliffs 0&#xD;min_terrain_distance 1</Example1>
+  </Node>
+
+  <!--TERRAIN_GENERATION-->
+  <Node Name="TERRAIN_GENERATION" Location="TERRAIN_GENERATION" Type="Section header" GameVersion="All">
+    <Description>
+      Replace terrains with other terrains.  Often used to place clumps of forest and to make the map look nice by mixing terrains for visual diversity.  Terrain generation occurs after lands, elevation and cliffs, but before connections.  Terrains are generated sequentially in the order they appear in the script.  Terrain positions cannot be directly specified.
+    </Description>
+  </Node>
+
+  <Node Name="color_correction" Location="TERRAIN_GENERATION" Type="Property" GameVersion="DE">
+    <ExternalReference1 Link="https://www.forgottenempires.net/age-of-empires-ii-definitive-edition/rms-features">Official DE Documentation</ExternalReference1>
+    <Argument1 Name="ColorCorrectionType">color correction constant (see: Season Types in global documentation) (default: no color correction)</Argument1>
+    <Description>
+      Specify a color correction type to apply on your map.  Controlled by the "Map Lighting" setting ingame.  Currently the following are available: CC_AUTUMN, CC_WINTER, CC_JUNGLE, CC_DESERT
+    </Description>
+    <Example1 Description="Desert-themed lighting">&lt;TERRAIN_GENERATION&gt;&#xD;color_correction CC_DESERT</Example1>
+  </Node>
+
+  <Node Name="create_terrain" Location="TERRAIN_GENERATION" Type="Command" GameVersion="All">
+    <Argument1 Name="TerrainType">terrain constant (see: Terrains in global documentation) (default: GRASS)</Argument1>
+    <Description>Create a clump of terrain. The exact behavior is dependent on the attributes specified.</Description>
+    <Example1 Description="Create a large clump of forest terrain on grass terrain">&lt;TERRAIN_GENERATION&gt;&#xD;create_terrain FOREST {&#xD;    base_terrain GRASS&#xD;    land_percent 10&#xD;}</Example1>
+  </Node>
+
+  <Node Name="base_terrain" Location="TERRAIN_GENERATION\Command" Type="Property" GameVersion="All">
+    <Argument1 Name="TerrainType">terrain constant (see: Terrains in global documentation) (default: GRASS)</Argument1>
+    <Description>
+      Specify the base terrain on which you want to place your new terrain.
+    </Description>
+    <Bug1>(DE): Does not default to GRASS, so make sure to specify the base terrain.</Bug1>
+    <Example1 Description="Create a large clump of forest terrain on grass terrain, then create water on the forest">&lt;TERRAIN_GENERATION&gt;&#xD;create_terrain FOREST {&#xD;    base_terrain GRASS&#xD;    land_percent 10&#xD;}&#xD;create_terrain WATER {&#xD;    base_terrain FOREST&#xD;}</Example1>
+  </Node>
+
+  <Node Name="base_layer" Location="TERRAIN_GENERATION\Command" Type="Property" GameVersion="DE">
+    <Argument1 Name="TerrainType">terrain constant (see: Terrains in global documentation) (default: none)</Argument1>
+    <Description>
+      Specify a layered terrain on which you want to place your new terrain.
+    </Description>
+    <AdditionalInfo1>If used together with base_terrain, the new terrain will be placed only where both the base and the layer apply.</AdditionalInfo1>
+    <Example1 Description="Layer desert on grass, and then place water on the layered desert.">&lt;TERRAIN_GENERATION&gt;&#xD;create_terrain DESERT {&#xD;    base_terrain GRASS&#xD;    land_percent 10&#xD;    terrain_mask 1&#xD;}&#xD;    create_terrain WATER {&#xD;    base_layer DESERT&#xD;}</Example1>
+  </Node>
+
+  <Node Name="terrain_mask" Location="TERRAIN_GENERATION\Command" Type="Property" GameVersion="DE">
+    <ExternalReference1 Link="https://www.forgottenempires.net/age-of-empires-ii-definitive-edition/rms-features">Official DE Documentation</ExternalReference1>
+    <Argument1 Name="Layer">number (1,2) (default: 0 - no masking)&#xD;  1 - new terrain is masked over the base terrain and inherits its properties&#xD;  2 - new terrain is masked under the base terrain and provides new properties</Argument1>
+    <Description>
+      Enables terrain masking/layering for the terrain being created.  Terrain inherits all properties, placement restrictions, automatic objects (such as trees for forest terrains), minimap color, etc. from the terrain underneath (ie. base_terrain when masking over, or create_terrain when masking under)
+    </Description>
+    <AdditionalInfo1>Terrain masking is a great way to blend terrains in a realistic and visually appealing manner.</AdditionalInfo1>
+    <AdditionalInfo2>Masking layers 1 and 2 have different masking patterns.</AdditionalInfo2>
+    <AdditionalInfo3>Terrain will have animated water if ANY of the component terrains are water.</AdditionalInfo3>
+    <AdditionalInfo4>Legacy terrains that are already a blend of two texture files cannot be visually masked.  They will contribute fully to the appearance of the final terrain. These terrains are: GRASS_SNOW, DIRT_SNOW, (dirt snow foundation), DLC_MOORLAND, DLC_JUNGLELEAVES, (road snow), (road fungus), DLC_DRYROAD, DLC_JUNGLEROAD, DLC_ROADGRAVEL</AdditionalInfo4>
+    <AdditionalInfo5>There are also some special cases with beach terrains, which may not always mask as expected.  (potentially a bug)</AdditionalInfo5>
+    <Example1 Description="Snow is masked on top of grass. Will produce grass decoration objects.">&lt;TERRAIN_GENERATION&gt;&#xD;create_terrain SNOW {&#xD;    base_terrain GRASS&#xD;    land_percent 50&#xD;    terrain_mask 1&#xD;}</Example1>
+    <Example2 Description="Snow is masked underneath grass. Would produce snow decoration objects, if there were any in the game.">&lt;TERRAIN_GENERATION&gt;&#xD;create_terrain SNOW {&#xD;    base_terrain GRASS&#xD;    land_percent 50&#xD;    terrain_mask 2&#xD;}</Example2>
+  </Node>
+
+  <Node Name="spacing_to_other_terrain_types" Location="TERRAIN_GENERATION\Command" Type="Property" GameVersion="All">
+    <Argument1 Name="Distance">number (default: 0)</Argument1>
+    <Description>
+      Minimum distance that this terrain will stay away from other terrain types.
+    </Description>
+    <AdditionalInfo1>Only considers existing terrains at the time of generation - terrains generated later will need their own spacing.</AdditionalInfo1>
+    <AdditionalInfo2>Terrains will not stay away from the same terrain type created previously.  This requires the use of an intermediate placeholder terrain.</AdditionalInfo2>
+    <AdditionalInfo2>Also affects the distance that the terrain will stay away from cliffs (because cliffs generate their own terrain underneath them - terrain 16)</AdditionalInfo2>
+    <AdditionalInfo2>When used with set_flat_terrain_only it also affects the distance that the terrain will stay away from slopes.</AdditionalInfo2>
+    <Example1 Description="Create a lake, and then fill the rest of the map with a forest which stays 10 tiles away from the water.">&lt;TERRAIN_GENERATION&gt;&#xD;create_terrain WATER {&#xD;    base_terrain GRASS&#xD;    land_percent 10&#xD;}&#xD;create_terrain FOREST {&#xD;    base_terrain GRASS&#xD;    spacing_to_other_terrain_types 10&#xD;    land_percent 100&#xD;}</Example1>
+  </Node>
+
+  <Node Name="set_flat_terrain_only" Location="TERRAIN_GENERATION\Command" Type="Property" GameVersion="All">
+    <Description>
+      The terrain will avoid sloped tiles by the distance specified in spacing_to_other_terrain_types
+    </Description>
+    <AdditionalInfo1>Only works when a distance of at least 1 has been specified.</AdditionalInfo1>
+    <Example1 Description="Create a hill where the bottom and top are desert, but the slope is grass">&lt;TERRAIN_GENERATION&gt;&#xD;create_elevation 7 {&#xD;    base_terrain GRASS&#xD;    number_of_tiles 3000&#xD;    number_of_clumps 1&#xD;}&#xD;&lt;TERRAIN_GENERATION&gt;&#xD;create_terrain DESERT {&#xD;    base_terrain GRASS&#xD;    land_percent 100&#xD;    number_of_clumps 9320&#xD;    spacing_to_other_terrain_types 1&#xD;    set_flat_terrain_only&#xD;}</Example1>
+  </Node>
+
+  <Node Name="land_percent" Location="TERRAIN_GENERATION\Command" Type="Property" GameVersion="All">
+    <Incompatibility1>number_of_tiles</Incompatibility1>
+    <Argument1 Name="%">number (1-100) (default: number_of_tiles)</Argument1>
+    <Description>
+      Percentage of the total map allocated to this create_terrain command.  If number_of_clumps is specified, this value is divided equally among the clumps.
+    </Description>
+    <AdditionalInfo1>Terrain will only be replaced where the appropriate base_terrain or base_layer is present, and will only replace the specified number of individual clumps, so it will not necessarily fill 100% of the map if set to 100.</AdditionalInfo1>
+    <Example1 Description="Create a desert that covers 50% of the map">&lt;TERRAIN_GENERATION&gt;&#xD;create_terrain DESERT {&#xD;    base_terrain GRASS&#xD;    land_percent 50&#xD;}</Example1>
+  </Node>
+
+  <Node Name="number_of_tiles" Location="TERRAIN_GENERATION\Command" Type="Property" GameVersion="All">
+    <Incompatibility1>land_percent</Incompatibility1>
+    <Argument1 Name="Amount">number (default:122 tiles on a tiny map)</Argument1>
+    <Description>
+      Total tile count allocated to this create_terrain command.  If number_of_clumps is specified, this value is divided equally among the clumps.
+    </Description>
+    <Example1 Description="Create a 500-tile lake">&lt;TERRAIN_GENERATION&gt;&#xD;create_terrain WATER {&#xD;    base_terrain GRASS&#xD;    number_of_tiles 500&#xD;    set_avoid_player_start_areas&#xD;}</Example1>
+  </Node>
+
+  <Node Name="number_of_clumps" Location="TERRAIN_GENERATION\Command" Type="Property" GameVersion="All">
+    <Argument1 Name="Amount">number (default: 1)&#xD;A maximum of 9320 should be used when also specifying set_scale_by_groups</Argument1>
+    <Description>
+      Number of individual terrain patches to create.
+    </Description>
+    <AdditionalInfo1>If clumps are larger than expected (or total count is lower than expected), several adjacent clumps have merged.</AdditionalInfo1>
+    <Example1 Description="Create 40 forest clumps on grass terrain.">&lt;TERRAIN_GENERATION&gt;&#xD;create_terrain FOREST {&#xD;    base_terrain GRASS&#xD;    land_percent 20&#xD;    number_of_clumps 40&#xD;}</Example1>
+  </Node>
+
+  <Node Name="clumping_factor" Location="TERRAIN_GENERATION\Command" Type="Property" GameVersion="All">
+    <Argument1 Name="Factor">number (default: 20 - different than for lands) Useful range of about -100 to 100</Argument1>
+    <Description>
+      The extent to which terrain tiles prefer to be together next to other tiles of the same clump.  High values create rounder terrain patches, while low values create more elongated irregular terrains.  Negative values create extremely snakey terrains.
+    </Description>
+    <Example1 Description="Create a regularly-shaped bamboo forest">&lt;TERRAIN_GENERATION&gt;&#xD;create_terrain BAMBOO {&#xD;    base_terrain GRASS&#xD;    number_of_tiles 500&#xD;    clumping_factor 100&#xD;}</Example1>
+  </Node>
+
+  <Node Name="set_scale_by_size" Location="TERRAIN_GENERATION\Command" Type="Property" GameVersion="All">
+    <Incompatibility1>set_scale_by_groups</Incompatibility1>
+    <Description>
+      Scales number_of_tiles to the map size.  Unscaled value refers to a 100x100 map (see: Map Sizes for the scaling table)
+    </Description>
+    <AdditionalInfo1>If you see a script scaling by both size and groups, only the final attribute will apply!</AdditionalInfo1>
+    <AdditionalInfo2>If you want to scale by both groups and size, use set_scale_by_groups instead.</AdditionalInfo2>
+    <Example1 Description="Create 4 lakes which become larger on larger maps. On a small map this will be 4 clumps with a total of 400*2.1 = 840 tiles.">&lt;TERRAIN_GENERATION&gt;&#xD;create_terrain WATER {&#xD;    base_terrain GRASS&#xD;    number_of_clumps 4&#xD;    number_of_tiles 400&#xD;    set_scale_by_size&#xD;}</Example1>
+  </Node>
+
+  <Node Name="set_scale_by_groups" Location="TERRAIN_GENERATION\Command" Type="Property" GameVersion="All">
+    <Incompatibility1>set_scale_by_size</Incompatibility1>
+    <Description>
+      Scales number_of_clumps to the map size.  Unscaled value refers to a 100x100 map (see: Map Sizes for the scaling table)
+    </Description>
+    <AdditionalInfo1>If you see a script scaling by both size and groups, only the final attribute will apply!</AdditionalInfo1>
+    <AdditionalInfo2>When used with number_of_tiles, the total tiles are also scaled to map size as well (but only for terrains, not for elevation).</AdditionalInfo2>
+    <Example1 Description="Create 400 tiles worth of lakes, with the number of lakes AND the total number of tiles scaling to map size.  On a small map this will be 4x2.1 = 8 clumps with a total of 400*2.1 = 840 tiles.">&lt;TERRAIN_GENERATION&gt;&#xD;create_terrain WATER {&#xD;    base_terrain GRASS&#xD;    number_of_clumps 4&#xD;    number_of_tiles 400&#xD;    set_scale_by_groups&#xD;}</Example1>
+  </Node>
+
+  <Node Name="set_avoid_player_start_areas" Location="TERRAIN_GENERATION\Command" Type="Property" GameVersion="All">
+    <Description>
+      The terrain will avoid the origins of player lands by about 20 tiles (with some variance).
+    </Description>
+    <AdditionalInfo1>Useful to prevent forests or water terrain from being directly under the town center.</AdditionalInfo1>
+    <Example1 Description="Forest Nothing with small clearings">&lt;TERRAIN_GENERATION&gt;&#xD;create_terrain FOREST {&#xD;    base_terrain GRASS&#xD;    land_percent 100&#xD;    number_of_clumps 999&#xD;    set_avoid_player_start_areas&#xD;}</Example1>
+  </Node>
+
+  <Node Name="height_limits" Location="TERRAIN_GENERATION\Command" Type="Property" GameVersion="All">
+    <Argument1 Name="Min">number (default: none)</Argument1>
+    <Argument2 Name="Max">number (default: none)</Argument2>
+    <Description>
+      The terrain will only be placed on tiles of height between min and max (inclusive).
+    </Description>
+    <AdditionalInfo1>For most purposes, values between 0-7 are useful.  0 being the standard non-elevated height and 7 being the max height that can be produced by create_elevation</AdditionalInfo1>
+    <Example1 Description="Create a hill and place desert terrain only on the slopes">&lt;ELEVATION_GENERATION&gt;&#xD;create_elevation 7 {&#xD;    base_terrain GRASS&#xD;    number_of_tiles 3000&#xD;    number_of_clumps 1&#xD;}&#xD;&lt;TERRAIN_GENERATION&gt;&#xD;create_terrain DESERT {&#xD;    base_terrain GRASS&#xD;    land_percent 100&#xD;    number_of_clumps 9320&#xD;    height_limits 1 6&#xD;}</Example1>
+  </Node>
+  
+  <!--CONNECTION_GENERATION-->
+  <Node Name="CONNECTION_GENERATION" Location="CONNECTION_GENERATION" Type="Section header" GameVersion="All">
+    <Description>
+      Optional section to replace terrains with other terrains, specifically along a path between the origins of lands.  Used, for example, to create roads between players, shallows across rivers, and to ensure that forests do not completely separate players.
+    </Description>
+    <AdditionalInfo1>You can only specify whole systems of connections, not individual connections.</AdditionalInfo1>
+    <AdditionalInfo2>Connections are processed in order</AdditionalInfo2>
+    <AdditionalInfo2>If the connection between two locations is not possible, that connection will not be produced at all.</AdditionalInfo2>
+    <Bug1>(DE): connections are based on the terrain prior to connection generation. So you cannot create a wide connection and then preferentially run a narrower connection through the created gap.</Bug1>
+  </Node>
+
+  <Node Name="create_connect_all_players_land" Location="CONNECTION_GENERATION" Type="Command" GameVersion="All">
+    <Description>
+      Connections will be generated between the origins of all player lands, and all lands assigned to players.
+    </Description>
+    <AdditionalInfo1>Connections may still pass through neutral lands if the cost is favorable.</AdditionalInfo1>
+    <Example1 Description="connect all players with dirt terrain">&lt;LAND_GENERATION&gt;&#xD;create_player_lands {&#xD;    terrain_type DESERT&#xD;    number_of_tiles 100&#xD;}&#xD;&lt;CONNECTION_GENERATION&gt;&#xD;create_connect_all_players_land {&#xD;    default_terrain_replacement DIRT&#xD;}</Example1>
+  </Node>
+
+  <Node Name="create_connect_teams_lands" Location="CONNECTION_GENERATION" Type="Command" GameVersion="All">
+    <Description>
+      Connections will be generated between the origins of player lands belonging to members of the same team.
+    </Description>
+    <AdditionalInfo1>Connections may still pass through neutral or enemy lands if the cost is favorable.</AdditionalInfo1>
+    <AdditionalInfo2>By default, players are on their own team in the scenario editor, so keep this in mind when testing in the scenario editor (but you can use the diplomacy tab to simulate team setups.)</AdditionalInfo2>
+    <Example1 Description="connect team members with a road">&lt;LAND_GENERATION&gt;&#xD;create_player_lands {&#xD;    terrain_type DESERT&#xD;    number_of_tiles 100&#xD;}&#xD;&lt;CONNECTION_GENERATION&gt;&#xD;create_connect_all_players_land {&#xD;    replace_terrain FOREST ROAD&#xD;    replace_terrain GRASS ROAD&#xD;}</Example1>
+  </Node>
+
+  <Node Name="create_connect_all_lands" Location="CONNECTION_GENERATION" Type="Command" GameVersion="All">
+    <Description>
+      Connections will be generated between the origins of all lands.
+    </Description>
+    <Example1 Description="interconnect all player islands and neutral islands.">&lt;LAND_GENERATION&gt;&#xD;base_terrain WATER&#xD;create_player_lands {&#xD;    terrain_type DESERT&#xD;    number_of_tiles 100&#xD;}&#xD;create_land {&#xD;   terrain_type FOREST&#xD;   number_of_tiles 100&#xD;   land_position 99 1&#xD;}&#xD;create_land {&#xD;   terrain_type PINE_FOREST&#xD;   number_of_tiles 100&#xD;   land_position 50 50&#xD;}&#xD;&lt;CONNECTION_GENERATION&gt;&#xD;create_connect_all_lands {&#xD;    replace_terrain WATER SHALLOW&#xD;}</Example1>
+  </Node>
+
+  <Node Name="create_connect_same_land_zones" Location="CONNECTION_GENERATION" Type="Command" GameVersion="All">
+    <Description>
+      Behaves identically to create_connect_all_lands : connections will be generated between the origins of all lands.
+    </Description>
+    <AdditionalInfo1>Previously undocumented, and therefore not typically used.</AdditionalInfo1>
+    <Example1 Description="interconnect all player islands and neutral islands.">&lt;LAND_GENERATION&gt;&#xD;base_terrain WATER&#xD;create_player_lands {&#xD;    terrain_type DESERT&#xD;    number_of_tiles 100&#xD;}&#xD;create_land {&#xD;   terrain_type FOREST&#xD;   number_of_tiles 100&#xD;   land_position 99 1&#xD;}&#xD;create_land {&#xD;   terrain_type PINE_FOREST&#xD;   number_of_tiles 100&#xD;   land_position 50 50&#xD;}&#xD;&lt;CONNECTION_GENERATION&gt;&#xD;create_connect_same_land_zones {&#xD;    replace_terrain WATER SHALLOW&#xD;}</Example1>
+  </Node>
+
+  <Node Name="create_connect_to_nonplayer_land" Location="CONNECTION_GENERATION" Type="Command" GameVersion="DE">
+    <ExternalReference1 Link="https://www.forgottenempires.net/age-of-empires-ii-definitive-edition/rms-features">Official DE Documentation</ExternalReference1>
+    <Description>
+      Connect all player lands to all neutral lands, but do not directly generate connections between individual players.
+    </Description>
+    <Bug1>create_connect_to_nonplayer_land blocks all future connection generation</Bug1>
+    <Bug2>It also blocks all team connection generation (except those involving player 1), when used after create_connect_teams_lands</Bug2>
+    <Example1 Description="connect players to a central desert, but not directly to each other">&lt;LAND_GENERATION&gt;&#xD;create_player_lands {&#xD;    terrain_type DIRT2&#xD;    number_of_tiles 100&#xD;}&#xD;create_land {&#xD;    terrain_type DESERT&#xD;    number_of_tiles 500&#xD;    land_position 50 50&#xD;}&#xD;&lt;CONNECTION_GENERATION&gt;&#xD;create_connect_to_nonplayer_land {&#xD;    replace_terrain GRASS ROAD2&#xD;}</Example1>
+  </Node>
+
+  <Node Name="default_terrain_replacement" Location="CONNECTION_GENERATION\Command" Type="Property" GameVersion="All">
+    <Argument1 Name="TerrainType">terrain constant (see: Terrains in Global documentation)</Argument1>
+    <Description>
+      Replace ALL terrain in the connection with the specified terrain.
+    </Description>
+    <AdditionalInfo1>Previously undocumented and rarely used, but good for quickly visualizing and debugging connections.</AdditionalInfo1>
+    <AdditionalInfo2>Overrides any previously specified replace_terrain attributes, so for best results, it should be used before any such attributes.</AdditionalInfo2>
+    <Example1 Description="Replace all connecting terrain with road, but replace water with shallows instead.">&lt;LAND_GENERATION&gt;&#xD;base_terrain WATER&#xD;create_player_lands {&#xD;    land_percent 100&#xD;    other_zone_avoidance_distance 10&#xD;}&#xD;&lt;CONNECTION_GENERATION&gt;&#xD;create_connect_all_players_land {&#xD;    default_terrain_replacement ROAD&#xD;    replace_terrain WATER SHALLOW&#xD;}</Example1>
+  </Node>
+
+  <Node Name="replace_terrain" Location="CONNECTION_GENERATION\Command" Type="Property" GameVersion="All">
+    <Argument1 Name="TerrainTypeOld">terrain constant (see: Terrains in Global documentation)</Argument1>
+    <Argument2 Name="TerrainTypeNew">terrain constant (see: Terrains in Global documentation)</Argument2>
+    <Description>
+      If the specified terrain is part of the connection, replace it with the new terrain specified.
+    </Description>
+    <AdditionalInfo1>This attribute can, and should, be used multiple times for different terrains.</AdditionalInfo1>
+    <AdditionalInfo2>A terrain can be replaced with itself.</AdditionalInfo2>
+    <AdditionalInfo3>Connections can pass through terrains even if they are not specified.</AdditionalInfo3>
+    <Bug1>(DE):The old terrain refers to the terrain that was present at the beginning of &lt;CONNECTION_GENERATION&gt; - even if that terrain has already been replaced by a previous command or attribute.</Bug1>
+    <Example1 Description="replace several terrains in a connection">&lt;CONNECTION_GENERATION&gt;&#xD;create_connect_all_players_land {&#xD;    replace_terrain GRASS DIRT2&#xD;    replace_terrain FOREST LEAVES&#xD;    replace_terrain SNOW_FOREST GRASS_SNOW&#xD;    replace_terrain DIRT DIRT3&#xD;    replace_terrain WATER SHALLOW&#xD;}</Example1>
+  </Node>
+
+  <Node Name="terrain_cost" Location="CONNECTION_GENERATION\Command" Type="Property" GameVersion="All">
+    <Argument1 Name="TerrainType">terrain constant (see: Terrains in Global documentation)</Argument1>
+    <Argument2 Name="Cost">number (0-4294967296) (default 1)&#xD;    0 (or any negative value) means that the connection CANNOT pass through the specified terrain at all, so 1 is the "lowest" cost&#xD;    For most usual applications a cost range of 1-15 is sufficient</Argument2>
+    <Description>
+      The cost of having the connection run through the specified terrain.
+    </Description>
+    <AdditionalInfo1>This attribute can be used multiple times for different terrains.</AdditionalInfo1>
+    <AdditionalInfo2>If all costs are equal, the connections will be straight lines.</AdditionalInfo2>
+    <AdditionalInfo3>If some costs are higher, the algorithm will prefer going though lower cost routes, even if they are longer than the more direct route.</AdditionalInfo3>
+    <AdditionalInfo4>A cost of 0 will prevent the connection generation from running through that terrain.  If a land origin is on such a terrain, or such a terrain MUST be crossed, then the connections to that land will not be generated at all. This can be used to manipulate connections to only connect certain lands and not others. (Doing this excessively can slow down the generation time.)</AdditionalInfo4>
+    <Example1 Description="generate connections that prefer going through grass and generally avoid forests and deeper water">&lt;CONNECTION_GENERATION&gt;&#xD;create_connect_all_players_land {&#xD;    replace_terrain GRASS ROAD&#xD;    replace_terrain FOREST LEAVES&#xD;    replace_terrain WATER SHALLOW&#xD;    replace_terrain MED_WATER SHALLOW&#xD;    replace_terrain DEEP_WATER SHALLOW&#xD;    terrain_cost GRASS 1&#xD;    terrain_cost FOREST 7&#xD;    terrain_cost WATER 7&#xD;    terrain_cost MED_WATER 12&#xD;    terrain_cost DEEP_WATER 15&#xD;}</Example1>
+  </Node>
+
+  <Node Name="terrain_size" Location="CONNECTION_GENERATION\Command" Type="Property" GameVersion="All">
+    <Argument1 Name="TerrainType">terrain constant (see: Terrains in Global documentation)</Argument1>
+    <Argument2 Name="Radius">number (default: 1). Given that a Ludicrously-sized map is 480 tiles wide, 961 will be enough to cover the entire map in all situations.</Argument2>
+    <Argument3 Name="Variance">number (default: 0)</Argument3>
+    <Description>
+      When a connection passes through a tile of the specified terrain, the area within radius +/- variance will be subject to replace_terrain / default_terrain_replacement and terrains will be replaced accordingly.
+    </Description>
+    <AdditionalInfo1>This attribute can be used multiple times for different terrains.</AdditionalInfo1>
+    <AdditionalInfo2>A radius of 0 will still replace a single-tile width path.</AdditionalInfo2>
+    <AdditionalInfo3>Variance is randomly selected for each tile crossed.</AdditionalInfo3>
+    <AdditionalInfo4>If variance is larger than radius, it can reduce the radius to a negative value, in which case no terrain will be replaced around these specific locations.</AdditionalInfo4>
+    <Example1 Description="Connect players with a variable ragged-looking road, and with shallows that are slightly wider.">&lt;CONNECTION_GENERATION&gt;&#xD;create_connect_all_players_land {&#xD;    replace_terrain GRASS ROAD&#xD;    replace_terrain WATER SHALLOW&#xD;    terrain_size GRASS 1 1&#xD;    terrain_size WATER 3 1&#xD;}</Example1>
+  </Node>
+  
+  <!--OBJECTS_GENERATION-->
+  <Node Name="OBJECTS_GENERATION" Location="OBJECTS_GENERATION" Type="Section header" GameVersion="All">
+    <Description>
+      Place buildings, units, resources, animals, straggler trees, decoration, etc.  Objects are placed in order. Normally, only 1 object can be placed per tile. If an object cannot find a valid position, it will not generate at all. So you should place the most important objects first. There are a few unusual cases:
+    </Description>
+    <AdditionalInfo1>Creating the object VILLAGER without specifying the amount will give each civilization their correct number of starting villagers. In DE this has changed and everyone gets 3 villagers to start, with the extra ones being spawned by the town center (to prevent Chinese from being too strong on nomad starts).</AdditionalInfo1>
+    <AdditionalInfo2>The object SCOUT will give an eagle to mesoamerican civilizations and a scout to all other civilizations.</AdditionalInfo2>
+    <AdditionalInfo3>Walls have some special behavior (see: Walls in Global documentation)</AdditionalInfo3>
+  </Node>
+
+  <Node Name="create_object" Location="OBJECTS_GENERATION" Type="Command" GameVersion="All">
+    <Argument1 Name="ObjectType">object constant (see: Objects in Global documentation)</Argument1>
+    <Description>Place the specified object, according to the chosen attributes.</Description>
+    <Example1 Description="Give all players a town center.">&lt;OBJECTS_GENERATION&gt;&#xD;create_object TOWN_CENTER {&#xD;    set_place_for_every_player&#xD;    max_distance_to_players 0&#xD;}</Example1>
+  </Node>
+  
+  <!--blueprint for a node, elements with a number at the end can be used as many time as you want as long as you increment the number each time, or can not be used at all if not needed (only the node's attributes and the "Description" element are mandatory")-->
+  <!--don't hesitate when adding new entry to look how all existing ones are formated if you have any doubt, and put them in their correct section-->
+  <!--keep in mind when writting text, in XML : < is &lt;   > is &gt;   & is &amp;   'new line' is &#xD;   (for more google "XML escape characters"), remember that you may also have to escape characters in url after having copied them in the document or link won't work-->
+  <Node Name="name_of_node" Location="location_of_node" Type="type_of_node" GameVersion="versions_of_game_compatible_with_node">
+    <Incompatibility1>name_of_incompatible_node_1</Incompatibility1>
+    <Incompatibility2>name_of_incompatible_node_2</Incompatibility2>
+    <ExternalReference1 Link="url1">name_of_ref_1</ExternalReference1>
+    <ExternalReference2 Link="url2">name_of_ref_2</ExternalReference2>
+    <Argument1 Name="argument_1_name">argument_1_description</Argument1>
+    <Argument2 Name="argument_2_name">argument_2_description</Argument2>
+    <Description>decription_of_node</Description>
+    <AdditionalInfo1>additionnal_info_1</AdditionalInfo1>
+    <AdditionalInfo2>additionnal_info_2</AdditionalInfo2>
+    <Bug1>additionnal_info_1</Bug1>
+    <Bug2>additionnal_info_2</Bug2>
+    <Example1 Description="example_1_description">example_1</Example1>
+    <Example2 Description="example_2_description">example_2</Example2>
+  </Node>
+  
+</RMSDocumentation>
+

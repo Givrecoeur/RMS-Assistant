@@ -95,6 +95,18 @@ namespace RMS_Assistant
             CurrentWordIndex = 0;
             CurrentLineIndex = 0;
             CurrentSection = "";
+
+            bool useCliff = false;
+            foreach (RMSNode section in root.Children)
+            {
+                if (section.Name == "CLIFF_GENERATION")
+                {
+                    useCliff = true;
+                    break;
+                }
+            }
+            root.useCliff = useCliff;
+
             return root; //TODO clean this : function return ROOT, but its not useful
             }
 
@@ -257,8 +269,8 @@ namespace RMS_Assistant
                 
                     else //we expect a new node
                     {
-                        Dictionary<string, int[]> availableProperties;
-                        Dictionary<string, int[]> availableCommands;
+                        Dictionary<string, int> availableProperties;
+                        Dictionary<string, int> availableCommands;
                         if (currentNode is RMSCommand)
                         {
                             availableProperties = RMSNodeNameConstants.FromNameGetDictProperty(currentNode.Name);
@@ -388,8 +400,7 @@ namespace RMS_Assistant
                             {
                                 pendingCommands.Add(newCommand);
                             }
-                            int[] config = availableCommands[word];
-                            nbAttributeExpected = config[0] + config[1];
+                            nbAttributeExpected = availableCommands[word];
                             if (nbAttributeExpected > 0)
                             {
                                 currentNode = newCommand;
@@ -400,8 +411,7 @@ namespace RMS_Assistant
                         {
                             RMSProperty newProperty = new RMSProperty(word, currentNode, UI);
                             currentNode.AddNode(newProperty);
-                            int[] config = availableProperties[word];
-                            nbAttributeExpected = config[0] + config[1];
+                            nbAttributeExpected = availableProperties[word];
                             if (nbAttributeExpected > 0)
                             {
                                 currentNode = newProperty;

@@ -12,7 +12,7 @@ namespace RMS_Assistant
     {
         public override List<string> AllAvailableNames { get { return RMSNodeNameConstants.Sections.Keys.ToList(); } }
 
-        public override Dictionary<string, int[]> DictNameAttributesConfigs { get { return RMSNodeNameConstants.Sections; } }
+        public override Dictionary<string, int> DictNameNbAttributes { get { return RMSNodeNameConstants.Sections; } }
 
         public override string AllAttributes { get { return ""; } }
 
@@ -24,18 +24,15 @@ namespace RMS_Assistant
 
         public override void Print(StreamWriter file, uint indentLevel = 0)
         {
-            if (Children.Count() > 0)
+            string comment = "";
+            if (Comment != "")
             {
-                string comment = "";
-                if (Comment != "")
-                {
-                    comment = " /* " + Comment + " */ ";
-                }
-                file.WriteLine("<" + Name + ">" + comment);
-                foreach (RMSNode child in Children)
-                {
-                    child.Print(file, 1);
-                }
+                comment = " /* " + Comment + " */ ";
+            }
+            file.WriteLine("<" + Name + ">" + comment);
+            foreach (RMSNode child in Children)
+            {
+                child.Print(file, 1);
             }
         }
 

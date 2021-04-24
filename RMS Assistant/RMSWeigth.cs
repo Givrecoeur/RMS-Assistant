@@ -12,7 +12,7 @@ namespace RMS_Assistant
     {
         public override List<string> AllAvailableNames { get { return RMSNodeNameConstants.Weigths.Keys.ToList(); } }
 
-        public override Dictionary<string, int[]> DictNameAttributesConfigs { get { return RMSNodeNameConstants.Weigths; } }
+        public override Dictionary<string, int> DictNameNbAttributes { get { return RMSNodeNameConstants.Weigths; } }
 
         public override string AllAttributes { get { return Attribute0; } }
 
@@ -48,8 +48,6 @@ namespace RMS_Assistant
             RMSWeigth clone = new RMSWeigth(Parent, UI)
             {
                 Attribute0 = String.Copy(Attribute0),
-                Min0 = Min0,
-                Max0 = Max0,
                 Comment = String.Copy(Comment)
             };
             foreach (RMSNode child in Children)
