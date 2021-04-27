@@ -80,6 +80,23 @@ namespace RMS_Assistant
 
         public void UpdateCreationButtons(RMSNode newNode)
         {
+            NewCommandButton.IsEnabled = true;
+            NewPropertyButton.IsEnabled = true;
+            NewConstantButton.IsEnabled = true;
+            NewDefineButton.IsEnabled = true;
+            PutConditionalButton.IsEnabled = true;
+            MakeConditionalButton.IsEnabled = true;
+            NewConditionButton.IsEnabled = true;
+            NewRandomButton.IsEnabled = true;
+            RandomizeButton.IsEnabled = true;
+            AddWeigthButton.IsEnabled = true;
+            CopyButton.IsEnabled = true;
+            NewCommentButton.IsEnabled = true;
+            MoveUpButton.IsEnabled = true;
+            MoveDownButton.IsEnabled = true;
+            DeleteButton.IsEnabled = true;
+            NewInclude.IsEnabled = true;
+
             if (CopiedNode != null)
             {
                 if (CopiedNode is RMSConstant || CopiedNode is RMSDefine)
@@ -117,90 +134,60 @@ namespace RMS_Assistant
             {
                 NewCommandButton.IsEnabled = false;
                 NewPropertyButton.IsEnabled = false;
-                NewConstantButton.IsEnabled = true;
-                NewDefineButton.IsEnabled = true;
-                PutConditionalButton.IsEnabled = true;
                 MakeConditionalButton.IsEnabled = false;
                 NewConditionButton.IsEnabled = false;
-                NewRandomButton.IsEnabled = true;
                 RandomizeButton.IsEnabled = false;
                 AddWeigthButton.IsEnabled = false;
                 CopyButton.IsEnabled = false;
-                NewCommentButton.IsEnabled = true;
                 MoveUpButton.IsEnabled = false;
                 MoveDownButton.IsEnabled = false;
                 DeleteButton.IsEnabled = false;
             }
 
-            if (newNode is RMSSection)
+            else if (newNode is RMSSection)
             {
                 if (newNode.Name == "PLAYER_SETUP")
                 {
                     NewCommandButton.IsEnabled = false;
-                    NewPropertyButton.IsEnabled = true;
                 }
                 else if (newNode.Name == "LAND_GENERATION")
                 {
-                    NewCommandButton.IsEnabled = true;
-                    NewPropertyButton.IsEnabled = true;
                 }
                 else if (newNode.Name == "ELEVATION_GENERATION")
                 {
-                    NewCommandButton.IsEnabled = true;
                     NewPropertyButton.IsEnabled = false;
                 }
                 else if (newNode.Name == "CLIFF_GENERATION")
                 {
                     NewCommandButton.IsEnabled = false;
-                    NewPropertyButton.IsEnabled = true;
                 }
                 else if (newNode.Name == "TERRAIN_GENERATION")
                 {
-                    NewCommandButton.IsEnabled = true;
-                    NewPropertyButton.IsEnabled = true;
                 }
                 else if (newNode.Name == "CONNECTION_GENERATION")
                 {
-                    NewCommandButton.IsEnabled = true;
                     NewPropertyButton.IsEnabled = false;
                 }
                 else if (newNode.Name == "OBJECTS_GENERATION")
                 {
-                    NewCommandButton.IsEnabled = true;
                     NewPropertyButton.IsEnabled = false;
                 }
-                NewConstantButton.IsEnabled = true;
-                NewDefineButton.IsEnabled = true;
-                PutConditionalButton.IsEnabled = true;
                 MakeConditionalButton.IsEnabled = false;
                 NewConditionButton.IsEnabled = false;
-                NewRandomButton.IsEnabled = true;
                 RandomizeButton.IsEnabled = false;
                 AddWeigthButton.IsEnabled = false;
                 CopyButton.IsEnabled = false;
-                NewCommentButton.IsEnabled = true;
-                MoveUpButton.IsEnabled = true;
-                MoveDownButton.IsEnabled = true;
                 DeleteButton.IsEnabled = false;
             }
 
             else if (newNode is RMSCommand)
             {
                 NewCommandButton.IsEnabled = false;
-                NewPropertyButton.IsEnabled = true;
-                NewConstantButton.IsEnabled = true;
-                NewDefineButton.IsEnabled = true;
-                PutConditionalButton.IsEnabled = true;
-                MakeConditionalButton.IsEnabled = true;
                 NewConditionButton.IsEnabled = false;
                 NewRandomButton.IsEnabled = true;
                 RandomizeButton.IsEnabled = true;
                 AddWeigthButton.IsEnabled = false;
-                CopyButton.IsEnabled = true;
-                NewCommentButton.IsEnabled = true;
-                MoveUpButton.IsEnabled = true;
-                MoveDownButton.IsEnabled = true;
-                DeleteButton.IsEnabled = true;
+                NewInclude.IsEnabled = false;
             }
 
             else if (newNode is RMSProperty)
@@ -210,16 +197,10 @@ namespace RMS_Assistant
                 NewConstantButton.IsEnabled = false;
                 NewDefineButton.IsEnabled = false;
                 PutConditionalButton.IsEnabled = false;
-                MakeConditionalButton.IsEnabled = true;
                 NewConditionButton.IsEnabled = false;
                 NewRandomButton.IsEnabled = false;
-                RandomizeButton.IsEnabled = true;
                 AddWeigthButton.IsEnabled = false;
-                CopyButton.IsEnabled = true;
-                NewCommentButton.IsEnabled = true;
-                MoveUpButton.IsEnabled = true;
-                MoveDownButton.IsEnabled = true;
-                DeleteButton.IsEnabled = true;
+                NewInclude.IsEnabled = false;
             }
 
             else if (newNode is RMSDefine)
@@ -229,16 +210,10 @@ namespace RMS_Assistant
                 NewConstantButton.IsEnabled = false;
                 NewDefineButton.IsEnabled = false;
                 PutConditionalButton.IsEnabled = false;
-                MakeConditionalButton.IsEnabled = true;
                 NewConditionButton.IsEnabled = false;
                 NewRandomButton.IsEnabled = false;
-                RandomizeButton.IsEnabled = true;
                 AddWeigthButton.IsEnabled = false;
-                CopyButton.IsEnabled = true;
-                NewCommentButton.IsEnabled = true;
-                MoveUpButton.IsEnabled = true;
-                MoveDownButton.IsEnabled = true;
-                DeleteButton.IsEnabled = true;
+                NewInclude.IsEnabled = false;
             }
 
             else if (newNode is RMSConstant)
@@ -248,16 +223,10 @@ namespace RMS_Assistant
                 NewConstantButton.IsEnabled = false;
                 NewDefineButton.IsEnabled = false;
                 PutConditionalButton.IsEnabled = false;
-                MakeConditionalButton.IsEnabled = true;
                 NewConditionButton.IsEnabled = false;
                 NewRandomButton.IsEnabled = false;
-                RandomizeButton.IsEnabled = true;
                 AddWeigthButton.IsEnabled = false;
-                CopyButton.IsEnabled = true;
-                NewCommentButton.IsEnabled = true;
-                MoveUpButton.IsEnabled = true;
-                MoveDownButton.IsEnabled = true;
-                DeleteButton.IsEnabled = true;
+                NewInclude.IsEnabled = false;
             }
 
             else if (newNode is RMSRandom)
@@ -277,6 +246,7 @@ namespace RMS_Assistant
                 MoveUpButton.IsEnabled = true;
                 MoveDownButton.IsEnabled = true;
                 DeleteButton.IsEnabled = true;
+                NewInclude.IsEnabled = false;
             }
 
             else if (newNode is RMSConditional)
@@ -286,16 +256,9 @@ namespace RMS_Assistant
                 NewConstantButton.IsEnabled = false;
                 NewDefineButton.IsEnabled = false;
                 PutConditionalButton.IsEnabled = false;
-                MakeConditionalButton.IsEnabled = true;
-                NewConditionButton.IsEnabled = true;
                 NewRandomButton.IsEnabled = false;
-                RandomizeButton.IsEnabled = true;
                 AddWeigthButton.IsEnabled = false;
-                CopyButton.IsEnabled = true;
-                NewCommentButton.IsEnabled = true;
-                MoveUpButton.IsEnabled = true;
-                MoveDownButton.IsEnabled = true;
-                DeleteButton.IsEnabled = true;
+                NewInclude.IsEnabled = false;
             }
 
             else if (newNode is RMSComment)
@@ -311,10 +274,7 @@ namespace RMS_Assistant
                 RandomizeButton.IsEnabled = false;
                 AddWeigthButton.IsEnabled = false;
                 CopyButton.IsEnabled = false;
-                NewCommentButton.IsEnabled = true;
-                MoveUpButton.IsEnabled = true;
-                MoveDownButton.IsEnabled = true;
-                DeleteButton.IsEnabled = true;
+                NewInclude.IsEnabled = false;
             }
 
             else if (newNode is RMSCondition || newNode is RMSWeigth)
@@ -324,6 +284,7 @@ namespace RMS_Assistant
                 NewCommentButton.IsEnabled = true;
                 DeleteButton.IsEnabled = true;
             }
+
             if (newNode.isInRandomBlock())
             {
                 RandomizeButton.IsEnabled = false;
@@ -442,6 +403,13 @@ namespace RMS_Assistant
             AddNewNodeButton.IsEnabled = true;
             CancelCreationButton.IsEnabled = true;
             UpdateNodeDocPanel(false);
+        }
+
+        private void NewIncludeButton_Click(object sender, RoutedEventArgs e)
+        {
+            RMSNode parent = xamlRMSTree.SelectedItem as RMSNode;
+            NodeInCreation = new RMSInclude(RMSNodeNameConstants.Includes.Keys.ToList()[1], parent, this); //default is include_drs (most used)
+            DisplayNewNodeInCreation();
         }
 
         private void NewCommandButton_Click(object sender, RoutedEventArgs e)

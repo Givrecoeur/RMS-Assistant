@@ -57,6 +57,13 @@ namespace RMS_Assistant
             { "Define", 1 }
         };
 
+        public static Dictionary<string, int> Includes = new Dictionary<string, int>
+        {
+            { "#include",     1 },
+            { "#include_drs", 1 },
+            { "#includeXS",   1 }
+        };
+
         //Commands
         public static Dictionary<string, int> CommandsLand = new Dictionary<string, int>
         {

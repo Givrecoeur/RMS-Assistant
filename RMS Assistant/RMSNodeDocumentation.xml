@@ -37,12 +37,14 @@
 
   <Node Name="grouped_by_team" Location="PLAYER_SETUP" Type="Property" GameVersion="UP/HD/DE">
     <Incompatibility1>random_placement</Incompatibility1>
+    <ExternalReference1 Link="http://userpatch.aiscripters.net/reference.html#">UserPatch Reference</ExternalReference1>
     <Description>
       Players are positioned in close proximity to each other. Distance between team members is double the base_size used in create_player_lands.
     </Description>
   </Node>
 
   <Node Name="direct_placement" Location="PLAYER_SETUP" Type="Property" GameVersion="UP/DE">
+    <ExternalReference1 Link="http://userpatch.aiscripters.net/reference.html#">UserPatch Reference</ExternalReference1>
     <Description>
       Allows the land_position attribute in create_land to be used in combination with the assign_to_player or assign_to attributes to individually position players at exact positions on the map.
     </Description>
@@ -54,12 +56,14 @@
   </Node>
 
   <Node Name="nomad_resources" Location="PLAYER_SETUP" Type="PLAYER_SECTION\Property" GameVersion="UP/HD/DE">
+    <ExternalReference1 Link="http://userpatch.aiscripters.net/reference.html#">UserPatch Reference</ExternalReference1>
     <Description>
       Adds the cost of a town center (275 Wood, 100 Stone) to every player's starting resources.  Use this in your custom nomad map if you want players to be able to build a town center without first gathering wood.
     </Description>
   </Node>
 
   <Node Name="ai_info_map_type" Location="PLAYER_SETUP" Type="Property" GameVersion="All">
+    <ExternalReference1 Link="http://userpatch.aiscripters.net/reference.html#">UserPatch Reference</ExternalReference1>
     <Argument1 Name="MapType">Map type constant (see: Map Types in global documentation) (default: CUSTOM)&#xD;Specify a standard map type that your map is similar to.</Argument1>
     <Argument2 Name="IsNomad">boolean (1 or 0) (default: 0)&#xD;Specify if your map is nomad style (no town center to start with).&#xD;Always use this on nomad starts since it prevents issues where ally locations are revealed (fixed in DE)</Argument2>
     <Argument3 Name="IsMichi">boolean (1 or 0) (default: 0)&#xD;Specify if your map is Michi style (forest completely separating players).</Argument3>
@@ -71,7 +75,8 @@
   </Node>
 
   <Node Name="weather_type" Location="PLAYER_SETUP" Type="Property" GameVersion="UP">
-    <ExternalReference1 Link="http://aok.heavengames.com/cgi-bin/forums/display.cgi?action=ct&amp;f=26,42296,,365">Weather Effects Guide</ExternalReference1>
+    <ExternalReference1 Link="http://userpatch.aiscripters.net/reference.html#">UserPatch Reference</ExternalReference1>
+    <ExternalReference2 Link="http://aok.heavengames.com/cgi-bin/forums/display.cgi?action=ct&amp;f=26,42296,,365">Weather Effects Guide</ExternalReference2>
     <Argument1 Name="PrecipitationStyle">number (-4 to 4) (default: 0)&#xD;0 is no precipitation; 2 is rain; 3 is thunderstorm; 4 is snow.&#xD;Precipitation goes west to east.  Use negative numbers for east to west.</Argument1>
     <Argument2 Name="LiveColor">number (0 to 255) (default: 0)&#xD;Color of terrain tinting in revealed areas.&#xD;0 is none; 1-255 refers to the color palette (see external reference).</Argument2>
     <Argument3 Name="FogColor">number (0 to 255) (default: 0)&#xD;Color of terrain tinting in the fog of war.&#xD;0 is none; 1-255 refers to the color palette (see external reference).</Argument3>
@@ -86,7 +91,8 @@
   </Node>
 
   <Node Name="effect_amount" Location="PLAYER_SETUP" Type="Property" GameVersion="UP/DE">
-    <ExternalReference1 Link="http://aok.heavengames.com/cgi-bin/forums/display.cgi?action=ct&amp;f=4,44466,0,365">UserPatch Effects Guide</ExternalReference1>
+    <ExternalReference1 Link="http://userpatch.aiscripters.net/reference.html#">UserPatch Reference</ExternalReference1>
+    <ExternalReference2 Link="http://aok.heavengames.com/cgi-bin/forums/display.cgi?action=ct&amp;f=4,44466,0,365">UserPatch Effects Guide</ExternalReference2>
     <Argument1 Name="EffectType">effect constant (see: Effect Constants in global documentation)</Argument1>
     <Argument2 Name="Type">object/resource/technology/effect constant (see: Objects, Resource Constants, Technology Constants, Miscellaneous Constants, Class Constants, Advanced Genie Editor in global documentation)</Argument2>
     <Argument3 Name="AttributeType">attribute constant (see: Attribute Constants in global documentation)</Argument3>
@@ -105,7 +111,8 @@
   </Node>
 
   <Node Name="effect_percent" Location="PLAYER_SETUP" Type="Property" GameVersion="UP/DE">
-    <ExternalReference1 Link="http://aok.heavengames.com/cgi-bin/forums/display.cgi?action=ct&amp;f=4,44466,0,365">UserPatch Effects Guide</ExternalReference1>
+    <ExternalReference1 Link="http://userpatch.aiscripters.net/reference.html#">UserPatch Reference</ExternalReference1>
+    <ExternalReference2 Link="http://aok.heavengames.com/cgi-bin/forums/display.cgi?action=ct&amp;f=4,44466,0,365">UserPatch Effects Guide</ExternalReference2>
     <Argument1 Name="EffectType">effect constant (see: Effect Constants in global documentation)</Argument1>
     <Argument2 Name="Type">object/resource/technology/effect constant (see: Objects, Resource Constants, Technology Constants, Miscellaneous Constants, Class Constants, Advanced Genie Editor in global documentation)</Argument2>
     <Argument3 Name="AttributeType">attribute constant (see: Attribute Constants in global documentation)</Argument3>
@@ -117,6 +124,7 @@
   </Node>
 
   <Node Name="guard_state" Location="PLAYER_SETUP" Type="Property" GameVersion="UP (referred to in the DE strings, but is not functional in DE)">
+    <ExternalReference1 Link="http://userpatch.aiscripters.net/reference.html#">UserPatch Reference</ExternalReference1>
     <Argument1 Name="ObjectType">object constant or class constant (see: Objects, Class Constants in global documentation)&#xD;for villagers use VILLAGER_CLASS instead of VILLAGER</Argument1>
     <Argument2 Name="ResourceType">resource amount constant (see: Resource Constants in global documentation)</Argument2>
     <Argument3 Name="ResourceDelta">number (default: 0)</Argument3>
@@ -132,6 +140,7 @@
   </Node>
 
   <Node Name="terrain_state" Location="PLAYER_SETUP" Type="Property" GameVersion="UP">
+    <ExternalReference1 Link="http://userpatch.aiscripters.net/reference.html#">UserPatch Reference</ExternalReference1>
     <Argument1 Name="Mode">number (0) (default: 0)</Argument1>
     <Argument2 Name="Parameter1">number (0) (default: 0)</Argument2>
     <Argument3 Name="Parameter2">number (0) (default: 0)</Argument3>
@@ -352,6 +361,7 @@
   </Node>
 
   <Node Name="base_elevation" Location="LAND_GENERATION\Command" Type="Property" GameVersion="UP/HD/DE">
+    <ExternalReference1 Link="http://userpatch.aiscripters.net/reference.html#">UserPatch Reference</ExternalReference1>
     <Argument1 Name="Height">number (1-16) (default: 0 - not elevated)&#xD;In UP/HD elevations higher than 7 should not be used, because objects will fail to render properly.&#xD;In DE, elevations higher than 16 may cause terrain rendering issues for certain (ie. smaller) screen resolutions.&#xD;Negative values maximally elevate a land (not recommended due to rendering issues)</Argument1>
     <Description>Elevate the entire land to the specified height.</Description>
     <AdditionalInfo1>Requires &lt;ELEVATION_GENERATION&gt; section (even empty) to work</AdditionalInfo1>
@@ -374,6 +384,7 @@
   </Node>
 
   <Node Name="assign_to" Location="LAND_GENERATION\Command" Type="Property" GameVersion="UP/DE">
+    <ExternalReference1 Link="http://userpatch.aiscripters.net/reference.html#">UserPatch Reference</ExternalReference1>
     <Incompatibility1>assign_to_player</Incompatibility1>
     <Argument1 Name="AssignTarget">AssignTargetConstant (see Global documentation) (default: not assigned to any players)&#xD;Options are AT_PLAYER, AT_COLOR, AT_TEAM</Argument1>
     <Argument2 Name="Number">varies depending on the AssignTarget&#xD;  - AT_PLAYER (1-8) - player number (refers to lobby order)&#xD;  - AT_COLOR (1-8) - player color&#xD;  - AT_TEAM (-10, -4,-3,-2,-1,0,1,2,3,4) - team number (refers to lobby order, not the number chosen by the team).  Gives the land to a player from the specified team.&#xD;    + 0 is for un-teamed players&#xD;    + negative values target a player NOT on the specified team&#xD;    + -10 gives the land to any player</Argument2>
@@ -1326,6 +1337,28 @@
     <Example1 Description="Manually scale relic count to map size.">&lt;OBJECTS_GENERATION&gt;&#xD;create_object RELIC {&#xD;    min_distance_to_players 25&#xD;    if TINY_MAP&#xD;        number_of_objects 5&#xD;        temp_min_distance_group_placement 35&#xD;    elseif SMALL_MAP&#xD;        number_of_objects 5&#xD;        temp_min_distance_group_placement 38&#xD;    elseif MEDIUM_MAP&#xD;        number_of_objects 5&#xD;        temp_min_distance_group_placement 38&#xD;    elseif LARGE_MAP&#xD;        number_of_objects 7&#xD;        temp_min_distance_group_placement 48&#xD;    elseif HUGE_MAP&#xD;        number_of_objects 8&#xD;        temp_min_distance_group_placement 52&#xD;    else&#xD;        number_of_objects 999&#xD;        temp_min_distance_group_placement 52&#xD;    endif&#xD;}</Example1>
     <Example2 Description="Replace the scout with a king when playing regicide.">&lt;OBJECTS_GENERATION&gt;&#xD;if REGICIDE    create_object KING&#xD;else    create_object SCOUT&#xD;endif&#xD;{&#xD;    set_place_for_every_player&#xD;    min_distance_to_players 7&#xD;    max_distance_to_players 9&#xD;}</Example2>
     <Example3 Description="Set up a NOT conditional - place a cow when 'infinite resources' is not true.">&lt;OBJECTS_GENERATION&gt;&#xD;if INFINITE_RESOURCES&#xD;else&#xD;    create_object DLC_COW {&#xD;        set_place_for_every_player&#xD;        find_closest&#xD;    }&#xD;endif</Example3>
+  </Node>
+
+  <Node Name="#include_drs" Location="Any" Type="Include" GameVersion="HD/DE">
+    <Argument1 Name="Filename">name (or path and name)&#xD;  + Valid file extensions are: rms, rms2, inc, def&#xD;  + You can navigate to a parent directory with ../&#xD;  + If your path or filename contains spaces, you can surround it with quotation marks: "this is the/path to/example file name.rms"</Argument1>
+    <Description>
+      Include a file located in the gamedata folder.
+    </Description>
+    <AdditionalInfo1>If you include a file somewhere else, the file path must be relative to the gamedata folder.</AdditionalInfo1>
+    <Example1 Description="Include the DE seasons file, so that you can use it in your own script, without having to set up your own terrains.">#include_drs F_seasons.inc</Example1>
+    <Example2 Description="Include that classic land and water resources file from AoC, by navigating to its location relative to gamedata_x2">&lt;OBJECTS_GENERATION&gt;&#xD;#include_drs ../gamedata_x1/land_and_water_resources.inc</Example2>
+    <Example3 Description="Make a custom version of blind random.">start_random&#xD;    percent_chance 20    #include_drs Arabia.rms&#xD;    percent_chance 20    #include_drs Baltic.rms&#xD;    percent_chance 20    #include_drs Gold_Rush.rms&#xD;    percent_chance 20    #include_drs Islands.rms&#xD;    percent_chance 20    #include_drs Team_Islands.rms&#xD;end_random</Example3>
+  </Node>
+
+  <Node Name="#includeXS" Location="Any" Type="Include" GameVersion="DE">
+    <ExternalReference1 Link="https://www.forgottenempires.net/age-of-empires-ii-definitive-edition/xs-scripting-in-age-of-empires-ii-definitive-edition">.xs scripting in Age of Empires II: Definitive Edition</ExternalReference1>
+    <ExternalReference2 Link="https://divy1211.github.io/AoE2DE_UGC_Guide/general/xs/beginner/">XS Scripting For Beginners</ExternalReference2>
+    <Argument1 Name="argument_1_name">argument_1_description</Argument1>
+    <Argument2 Name="argument_2_name">argument_2_description</Argument2>
+    <Description>decription_of_node</Description>
+    <AdditionalInfo1>additionnal_info_1</AdditionalInfo1>
+    <AdditionalInfo2>additionnal_info_2</AdditionalInfo2>
+    <Example1 Description="See external ressource : XS Scripting For Beginners"> </Example1>
   </Node>
   
   <!--blueprint for a node, elements with a number at the end can be used as many time as you want as long as you increment the number each time, or can not be used at all if not needed (only the node's attributes and the "Description" element are mandatory")-->

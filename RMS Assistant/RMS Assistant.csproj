@@ -82,6 +82,7 @@
     <Compile Include="ColorConstants.cs" />
     <Compile Include="RMSComment.cs" />
     <Compile Include="RMSConditional.cs" />
+    <Compile Include="RMSInclude.cs" />
     <Compile Include="RMSNodeNameConstants.cs" />
     <Compile Include="RMSParser.cs" />
     <Compile Include="RMSProperty.cs" />

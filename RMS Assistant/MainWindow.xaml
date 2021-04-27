@@ -30,6 +30,13 @@
                         <TextBlock Text="{Binding Comment}" Foreground="Green" Margin="5, 0, 5, 0"/>
                     </StackPanel>
                 </HierarchicalDataTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type local:RMSInclude}" ItemsSource="{Binding Children}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Name}" Foreground="LightGray"/>
+                        <TextBlock Text="{Binding Attribute0}" Foreground="LightGray" Margin="5, 0, 5, 0"/>
+                        <TextBlock Text="{Binding Comment}" Foreground="Green" Margin="5, 0, 5, 0"/>
+                    </StackPanel>
+                </HierarchicalDataTemplate>
                 <HierarchicalDataTemplate DataType="{x:Type local:RMSCommand}" ItemsSource="{Binding Children}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Name}" Foreground="YellowGreen"/>
@@ -102,7 +109,7 @@
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0" Margin="5" >
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="0*" MinHeight="270"/>
+                    <RowDefinition Height="0*" MinHeight="300"/>
                     <RowDefinition Height="0*" MinHeight="180"/>
                     <RowDefinition Height="3*"/>
                     <RowDefinition Height="0*" MinHeight="40"/>
@@ -116,7 +123,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="0*" MinHeight="30"/>
                         <RowDefinition Height="*" MinHeight="120"/>
-                        <RowDefinition Height="0*" MinHeight="120"/>
+                        <RowDefinition Height="0*" MinHeight="150"/>
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0">
                         <Label Content="Selected Node" />
@@ -173,6 +180,15 @@
                             <Button x:Name="PasteButton" Grid.Column="1" VerticalAlignment="Center" Height="20" Click="PasteButton_Click" Margin="5" IsEnabled="False">Paste Node</Button>
                             <Button x:Name="MoveDownButton" Grid.Column="2" VerticalAlignment="Center" Height="20" Click="MoveDown_Click" Margin="5" IsEnabled="False">Move Down</Button>
                             <Button x:Name="DeleteButton" Grid.Column="3" VerticalAlignment="Center" Height="20" Click="Delete_Click" Margin="5" IsEnabled="False">Delete</Button>
+                        </Grid>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button x:Name="NewInclude" Grid.Column="0" VerticalAlignment="Center" Height="20" Click="NewIncludeButton_Click" Margin="5" IsEnabled="False">New Include</Button>
                         </Grid>
                     </StackPanel>
                 

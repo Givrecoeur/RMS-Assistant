@@ -260,7 +260,7 @@ namespace RMS_Assistant
                         {
                             indexAttribute = 0;
                             nbAttributeExpected = 0;
-                            if (currentNode is RMSProperty || currentNode is RMSDefine || currentNode is RMSConstant || currentNode is RMSCommand)
+                            if (currentNode is RMSProperty || currentNode is RMSDefine || currentNode is RMSConstant || currentNode is RMSCommand || currentNode is RMSInclude)
                             {
                                 currentNode = currentNode.Parent; //once we have their attribute, these kind of node are completed (or need a "{" to begin in RMSCommand case)
                             }
@@ -383,6 +383,15 @@ namespace RMS_Assistant
                                 currentNode = currentNode.Parent.Parent;
                             }
                             else throw new Exception("Incorrectly placed end_random");
+                        }
+
+                        else if (word == "#include" || word == "#include_drs"  || word == "#includeXS")
+                        {
+                            RMSInclude newInclude = new RMSInclude(word, currentNode, UI);
+                            currentNode.AddNode(newInclude);
+                            currentNode = newInclude;
+                            lastAddedNode = newInclude;
+                            nbAttributeExpected = 1;
                         }
 
                         else if (availableCommands != null && availableCommands.Keys.Contains(word))
