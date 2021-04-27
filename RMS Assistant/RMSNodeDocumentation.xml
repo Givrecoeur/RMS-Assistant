@@ -20,8 +20,6 @@
     <Example2 Description="example_2_description">example_2</Example2>
   </Node>
   
-  <!--Miscelanious Node-->
-  
   <!--PLAYER_SETUP section-->
   <Node Name="PLAYER_SETUP" Location="PLAYER_SETUP" Type="Section header" GameVersion="All">
     <Description>
@@ -892,6 +890,442 @@
     <Argument1 Name="ObjectType">object constant (see: Objects in Global documentation)</Argument1>
     <Description>Place the specified object, according to the chosen attributes.</Description>
     <Example1 Description="Give all players a town center.">&lt;OBJECTS_GENERATION&gt;&#xD;create_object TOWN_CENTER {&#xD;    set_place_for_every_player&#xD;    max_distance_to_players 0&#xD;}</Example1>
+  </Node>
+
+  <Node Name="number_of_objects" Location="OBJECTS_GENERATION\Command" Type="Property" GameVersion="All">
+    <Argument1 Name="Amount">number (default: 1) A maximum of 9320 should be used when also specifying set_scaling_to_map_size
+    </Argument1>
+    <Description>
+      Number of objects to create.
+    </Description>
+    <Example1 Description="Place 10 individual gold mines on the map.">&lt;OBJECTS_GENERATION&gt;&#xD;create_object GOLD {&#xD;    number_of_objects 10&#xD;}</Example1>
+  </Node>
+
+  <Node Name="number_of_groups" Location="OBJECTS_GENERATION\Command" Type="Property" GameVersion="All">
+    <Argument1 Name="Amount">number (default: individual objects - no groups) A maximum of 9320 should be used when also specifying set_scaling_to_map_size</Argument1>
+    <Description>
+      Place the specified number of groups, which each consist of the number of individual objects chosen in number_of_objects
+    </Description>
+    <AdditionalInfo1>Total objects = number_of_objects x number_of_groups</AdditionalInfo1>
+    <Example1 Description="Place 20 groups of each 5 boars.">&lt;OBJECTS_GENERATION&gt;&#xD;create_object BOAR {&#xD;    number_of_objects 5&#xD;    number_of_groups 20&#xD;}</Example1>
+  </Node>
+
+  <Node Name="group_variance" Location="OBJECTS_GENERATION\Command" Type="Property" GameVersion="All">
+    <Argument1 Name="Amount">number (default: 0)</Argument1>
+    <Description>
+      The number_of_objects is randomly varied by up to +/- the amount specified.
+    </Description>
+    <AdditionalInfo1>A minimum of 1 object will always be generated, even if the variance would make the count 0 or negative.</AdditionalInfo1>
+    <AdditionalInfo2>Note that each group varies independently, so this is not suitable for ensuring fair player starting resources. Consider using Random Code for such cases.</AdditionalInfo2>
+    <Example1 Description="Create 10 patches with each 2-8 forage bushes.">&lt;OBJECTS_GENERATION&gt;&#xD;create_object FORAGE {&#xD;    number_of_objects 5&#xD;    number_of_groups 10&#xD;    group_variance 3&#xD;    set_tight_grouping&#xD;}</Example1>
+  </Node>
+
+  <Node Name="resource_delta" Location="OBJECTS_GENERATION\Command" Type="Property" GameVersion="UP/DE">
+    <Argument2 Name="Amount">number (default: 0)&#xD;In UP, resource amount will overflow past 32767&#xD;  -In DE, resource amount will overflow past 2147483647 (but will become inaccurate before then)&#xD;  -Negative values can be used to reduce the resources</Argument2>
+    <Description>
+      Modify the amount of food/wood/gold/stone in an object.
+    </Description>
+    <AdditionalInfo1>Does not work for farms.</AdditionalInfo1>
+    <AdditionalInfo2>Does not appear when testing a map from the scenario editor.</AdditionalInfo2>
+    <AdditionalInfo3>You can give food to wolves.  However, if a villager runs into and kills a wolf, they will automatically gather the food (instead of doing whatever you sent them to do) - so this is not great for gameplay.</AdditionalInfo3>
+    <Example1 Description="Create gold piles that have 100 less gold in them and stone mines with 100 more stone.">>&lt;OBJECTS_GENERATION&gt;&#xD;create_object GOLD {&#xD;    number_of_objects 7&#xD;    resource_delta -100&#xD;}&#xD;create_object STONE {&#xD;    number_of_objects 7&#xD;    resource_delta 100&#xD;}</Example1>
+  </Node>
+
+  <Node Name="second_object" Location="OBJECTS_GENERATION\Command" Type="Property" GameVersion="DE">
+    <Argument1 Name="ObjectType">object constant (see: Objects in Global documentation)</Argument1>
+    <Description>
+      Specify ANY object to be placed on top of the main object.
+    </Description>
+    <AdditionalInfo1>If you are placing multiple objects, each will get the specified second object.</AdditionalInfo1>
+    <AdditionalInfo2>In the official maps, it used to place villagers on top of farms for empire wars.</AdditionalInfo2>
+    <AdditionalInfo3>second_object can be used to bypass terrain restrictions by using an invisible placeholder object as the main object. For off-grid placeholders, any dead unit can be used. For on-grid placeholders, try the terrain blocker (ID 1613) or the dead fish trap (ID 278), or a berry bush with zero food (using resource_delta)</AdditionalInfo3>
+    <Example1 Description="Players start with a cow underneath their town center.">&lt;OBJECTS_GENERATION&gt;&#xD;create_object TOWN_CENTER {&#xD;    set_place_for_every_player&#xD;    max_distance_to_players 0&#xD;    second_object DLC_COW&#xD;}</Example1>
+  </Node>
+
+  <Node Name="set_scaling_to_map_size" Location="OBJECTS_GENERATION\Command" Type="Property" GameVersion="All">>
+    <Incompatibility1>set_scaling_to_player_number</Incompatibility1>
+    <Description>
+      Scales number_of_groups to the map size.  Unscaled value refers to a 100x100 map (see: Map Sizes for the scaling table)
+    </Description>
+    <AdditionalInfo1>If no grouping is present, scaling applies to number_of_objects instead.</AdditionalInfo1>
+    <Example1 Description="Create clumps of 10 gold and scale the number of groups to map size.">&lt;OBJECTS_GENERATION&gt;&#xD;create_object GOLD {&#xD;    number_of_objects 10&#xD;    number_of_groups 3&#xD;    set_scaling_to_map_size&#xD;    set_tight_grouping&#xD;}</Example1>
+  </Node>
+
+  <Node Name="set_scaling_to_player_number" Location="OBJECTS_GENERATION\Command" Type="Property" GameVersion="All">
+    <Incompatibility1>set_scaling_to_map_size</Incompatibility1>
+    <Description>
+      Scales number_of_groups to player count. This means x2 for a 2-player game and x8 for an 8-player game.
+    </Description>
+    <AdditionalInfo1>If no grouping is present, scaling applies to number_of_objects instead.</AdditionalInfo1>
+    <Example1 Description="Scale the number of relics by the number of players">&lt;OBJECTS_GENERATION&gt;&#xD;create_object RELIC {&#xD;    number_of_objects 2&#xD;    set_scaling_to_player_number&#xD;}</Example1>
+  </Node>
+
+  <Node Name="set_place_for_every_player" Location="OBJECTS_GENERATION\Command" Type="Property" GameVersion="All">
+    <Incompatibility1>place_on_specific_land_id</Incompatibility1>
+    <Description>
+      Place the object(s) as a personal object for each player (actually for each player land).  Objects that cannot be owned by players (boar, gold, trees, etc.) also require set_gaia_object_only to be placed for every player.
+    </Description>
+    <AdditionalInfo1>Only works for player lands or lands assigned to players. Disabled by land_id</AdditionalInfo1>
+    <AdditionalInfo2>Objects will only be placed where they are not separated from the origin of their land by a terrain they are restricted on.&#xD;  + This means that on islands your resources will only end up on your own island&#xD;  + It also means that player gold mines on acropolis can only be placed on the hilltops, because gold is restricted from the rock terrain.&#xD;  + Water objects (docks/boats) CAN be placed if the player land is made of a dirt terrain type.&#xD;  + Terrain restrictions can be bypassed by using a placeholder and second_object&#xD;  + Even though road terrains are restricted for resources, they do not form a separation the way other terrains do</AdditionalInfo2>
+    <Example1 Description="Give every player their starting villagers.">&lt;OBJECTS_GENERATION&gt;&#xD;create_object VILLAGER {&#xD;    set_place_for_every_player&#xD;    min_distance_to_players 6&#xD;    max_distance_to_players 7&#xD;}</Example1>
+  </Node>
+
+  <Node Name="place_on_specific_land_id" Location="OBJECTS_GENERATION\Command" Type="Property" GameVersion="All">
+    <Incompatibility1>set_place_for_every_player</Incompatibility1>
+    <Argument1 Name="Identifier">number</Argument1>
+    <Description>
+      Place the object(s) on each land of the specified identifier. IDs are set in &lt;LAND_GENERATION&gt; by using the land_id attribute.
+    </Description>
+    <AdditionalInfo1>Objects will only be placed where they are not separated from the origin of their land by a terrain they are restricted on.&#xD;  + Even though road terrains are restricted for resources, they do not form a separation the way other terrains do.</AdditionalInfo1>
+    <Example1 Description="Create a tiny snowy land and place a gold mine on it.">&lt;LAND_GENERATION&gt;&#xD;&#xD;base_terrain WATER&#xD;create_player_lands {&#xD;    terrain_type DIRT&#xD;    land_percent 0&#xD;}&#xD;create_land {&#xD;    terrain_type SNOW&#xD;    land_percent 0&#xD;    land_id 13&#xD;    land_position 50 50&#xD;}&#xD;&lt;OBJECTS_GENERATION&gt;&#xD;create_object GOLD {&#xD;    place_on_specific_land_id 13&#xD;}</Example1>
+  </Node>
+
+  <Node Name="set_gaia_object_only" Location="OBJECTS_GENERATION\Command" Type="Property" GameVersion="All">
+    <Description>
+      Use with set_place_for_every_player to place gaia (neutral) objects on a per-player basis.  Must be used when placing player's gold/stone/berries/deer/boar
+    </Description>
+    <AdditionalInfo1>Can be used for controllable objects (for example, sheep)</AdditionalInfo1>
+    <AdditionalInfo2>Units and buildings will permanently join the player who first finds them, unless set_gaia_unconvertible is also specified.</AdditionalInfo2>
+    <AdditionalInfo3>Gaia building architectural style can be specified with set_gaia_civilization</AdditionalInfo3>
+    <Example1 Description="Give every player four gaia sheep close to their starting town.">&lt;OBJECTS_GENERATION&gt;&#xD;create_object SHEEP {&#xD;    number_of_objects 4&#xD;    set_loose_grouping&#xD;    set_gaia_object_only&#xD;    set_place_for_every_player&#xD;    min_distance_to_players 7&#xD;    max_distance_to_players 8&#xD;}</Example1>
+  </Node>
+
+  <Node Name="set_gaia_unconvertible" Location="OBJECTS_GENERATION\Command" Type="Property" GameVersion="DE">
+    <Description>
+      Use with any gaia object to make that object unrescuable by players and hostile towards them.
+    </Description>
+    <AdditionalInfo1>Must be used after set_gaia_object_only</AdditionalInfo1>
+    <AdditionalInfo2>Note that gaia military units will act as if they were on defensive stance - attacking anything that enters their line of sight and retreating if you run away.</AdditionalInfo2>
+    <AdditionalInfo3>Does not work when testing from the scenario editor.</AdditionalInfo3>
+    <AdditionalInfo4>Unrescuable status does not apply to second_object</AdditionalInfo4>
+    <AdditionalInfo5>Certain objects are always convertible (ie. monuments) or buggy (town centers, gates).</AdditionalInfo5>
+    <AdditionalInfo6>Gaia markets lose functionality, and cannot be traded with. Use object 1646 to give gaia an indestructible market for players to trade with.</AdditionalInfo6>
+    <AdditionalInfo7>Gaia monasteries can be used to store relics in.</AdditionalInfo7>
+    <Example1 Description="Decorate the map with unrescuable gaia pyramids.">&lt;OBJECTS_GENERATION&gt;&#xD;create_object PYRAMID {&#xD;    number_of_objects 3&#xD;    set_gaia_object_only&#xD;    set_gaia_unconvertible&#xD;}</Example1>
+  </Node>
+
+  <Node Name="group_placement_radius" Location="OBJECTS_GENERATION\Command" Type="Property" GameVersion="All">
+    <Argument1 Name="Radius">number (default: 3 = a 7x7 area)</Argument1>
+    <Description>
+      Specify the number of tiles out from the central tile that objects belonging to the same group may spawn.
+    </Description>
+    <AdditionalInfo1>Activates grouping behaviour.</AdditionalInfo1>
+    <AdditionalInfo2>Useful for keeping gold/stone/berries from forming long lines.</AdditionalInfo2>
+    <AdditionalInfo3>If the number_of_objects exceeds the available number of tiles, then a perfect square worth of objects will be filled.</AdditionalInfo3>
+    <Example1 Description="Give each player forage bushes that must stay in a 3x3 area.">&lt;OBJECTS_GENERATION&gt;&#xD;create_object FORAGE {&#xD;    number_of_objects 7&#xD;    set_tight_grouping&#xD;    group_placement_radius 1&#xD;    set_gaia_object_only&#xD;    set_place_for_every_player&#xD;    min_distance_to_players 7&#xD;    max_distance_to_players 8&#xD;}</Example1>
+  </Node>
+
+  <Node Name="set_tight_grouping" Location="OBJECTS_GENERATION\Command" Type="Property" GameVersion="All">
+    <Incompatibility1>set_loose_grouping</Incompatibility1>
+    <Description>
+      Objects belonging to the same group must be in adjacent tiles.  Commonly used for berries, gold and stone.
+    </Description>
+    <AdditionalInfo1>Activates grouping behaviour.</AdditionalInfo1>
+    <AdditionalInfo2>Objects that are larger than one tile and cannot overlap (most buildings), will not be placed when using tight grouping.</AdditionalInfo2>
+    <Example1 Description="Far player stone.">&lt;OBJECTS_GENERATION&gt;&#xD;create_object STONE {&#xD;    number_of_objects 4&#xD;    group_placement_radius 2&#xD;    set_tight_grouping&#xD;    set_gaia_object_only&#xD;    set_place_for_every_player&#xD;    min_distance_to_players 20&#xD;    max_distance_to_players 27&#xD;}</Example1>
+  </Node>
+
+  <Node Name="set_loose_grouping" Location="OBJECTS_GENERATION\Command" Type="Property" GameVersion="All">
+    <Incompatibility1>set_tight_grouping</Incompatibility1>
+    <Description>
+      Objects belonging to the same group can be placed anywhere within the confines of group_placement_radius
+    </Description>
+    <AdditionalInfo1>Activates grouping behaviour.</AdditionalInfo1>
+    <AdditionalInfo2>Loose grouping is the default type of grouping, so you can omit this attribute if you specify group_placement_radius</AdditionalInfo2>
+    <AdditionalInfo3>Commonly used for sheep and deer.</AdditionalInfo3>
+    <Example1 Description="Give players a group of 7 deer.">&lt;OBJECTS_GENERATION&gt;&#xD;create_object DEER {&#xD;    number_of_objects 7&#xD;    number_of_groups 1&#xD;    group_placement_radius 5&#xD;    set_loose_grouping&#xD;    set_gaia_object_only&#xD;    set_place_for_every_player&#xD;    min_distance_to_players 14&#xD;    max_distance_to_players 22&#xD;}</Example1>
+  </Node>
+
+  <Node Name="terrain_to_place_on" Location="OBJECTS_GENERATION\Command" Type="Property" GameVersion="All">
+    <Argument1 Name="TerrainType">terrain constant (see: Terrains in Global documentation) (default: any valid terrain)</Argument1>
+    <Description>
+      The object(s) will only be placed on the specified terrain.
+    </Description>
+    <Example1 Description="Place decorative rocks on a central desert.">&lt;LAND_GENERATION&gt;&#xD;create_land {&#xD;    terrain_type DESERT&#xD;    number_of_tiles 500&#xD;    land_position 50 50&#xD;}&#xD;&lt;OBJECTS_GENERATION&gt;&#xD;create_object ROCK {&#xD;    number_of_objects 300&#xD;    terrain_to_place_on DESERT&#xD;}</Example1>
+  </Node>
+
+  <Node Name="layer_to_place_on" Location="OBJECTS_GENERATION\Command" Type="Property" GameVersion="DE">
+    <Argument1 Name="TerrainType">terrain constant (see: Terrains in Global documentation) (default: any layer)</Argument1>
+    <Description>
+      The object(s) will only be placed on the specified layering terrain.
+    </Description>
+    <AdditionalInfo1>Works for terrain_mask 1, but not when set to 2. In that case you must use terrain_to_place_on instead, because the layer has become the main terrain.</AdditionalInfo1>
+    <AdditionalInfo2>If used together with terrain_to_place_on, the object(s) will be placed only where both the base terrain and the layer apply.</AdditionalInfo2>
+    <Example1 Description="Place rocks on a small patch of layered snow within a larger desert area.">&lt;LAND_GENERATION&gt;&#xD;create_land {&#xD;    terrain_type DESERT&#xD;    number_of_tiles 500&#xD;    land_position 50 50&#xD;}&#xD;&lt;TERRAIN_GENERATION&gt;&#xD;create_terrain SNOW {&#xD;    base_terrain DESERT&#xD;    number_of_tiles 20&#xD;    terrain_mask 1&#xD;}&#xD;&lt;OBJECTS_GENERATION&gt;&#xD;create_object ROCK {&#xD;    number_of_objects 300&#xD;    layer_to_place_on DESERT&#xD;}</Example1>
+  </Node>
+
+  <Node Name="place_on_forest_zone" Location="OBJECTS_GENERATION\Command" Type="Property" GameVersion="DE">
+    <Incompatibility1>avoid_forest_zone</Incompatibility1>
+    <ExternalReference1 Link="https://www.forgottenempires.net/age-of-empires-ii-definitive-edition/rms-features">Official DE Documentation</ExternalReference1>
+    <Description>
+      Place objects only on, and directly next to, tiles with trees on them (including straggler trees and scenario editor trees).
+    </Description>
+    <Example1 Description="Place sheep all along the edge of forests.">&lt;OBJECTS_GENERATION&gt;&#xD;create_object SHEEP {&#xD;    number_of_objects 99999&#xD;    place_on_forest_zone&#xD;}</Example1>
+  </Node>
+
+  <Node Name="avoid_forest_zone" Location="OBJECTS_GENERATION\Command" Type="Property" GameVersion="DE">
+    <Incompatibility1>place_on_forest_zone</Incompatibility1>
+    <ExternalReference1 Link="https://www.forgottenempires.net/age-of-empires-ii-definitive-edition/rms-features">Official DE Documentation</ExternalReference1>
+    <Argument1 Name="Distance">number (default: no avoidance). Default is 1, if you specify the argument, but omit the distance.</Argument1>
+    <Description>
+      Objects will stay the specified number of tiles away from any trees (including straggler trees and scenario editor trees)
+    </Description>
+    <AdditionalInfo1>Used to keep resources away from forests.</AdditionalInfo1>
+    <AdditionalInfo2>Note that the forest trees themselves are being avoided, so for sparse forests (especially baobab) larger distances may be necessary.</AdditionalInfo2>
+    <AdditionalInfo3>If the objects are grouped, distance will apply to the individual members.</AdditionalInfo3>
+    <Example1 Description="Fill the map with gold, except for the areas near trees.">&lt;OBJECTS_GENERATION&gt;&#xD;create_object GOLD {&#xD;    number_of_groups 99999&#xD;    avoid_forest_zone 3&#xD;}</Example1>
+  </Node>
+
+  <Node Name="avoid_cliff_zone" Location="OBJECTS_GENERATION\Command" Type="Property" GameVersion="DE">
+    <Argument1 Name="Distance">number (default: no avoidance). Default is 1, if you specify the argument, but omit the distance.</Argument1>
+    <Description>
+      Objects will stay the specified number of tiles away from cliffs.  Note that because of the size of the cliff objects, you need to specify at least a distance of 2 to actually create a gap between the cliffs and the object(s).
+    </Description>
+    <AdditionalInfo1>Useful for preventing inaccessible resources.</AdditionalInfo1>
+    <AdditionalInfo2>If the objects are grouped, distance will apply to the individual members.</AdditionalInfo2>
+    <Example1 Description="Fill the map with stone that stays 3 tiles away from cliffs.">&lt;CLIFF_GENERATION&gt;&#xD;&lt;OBJECTS_GENERATION&gt;&#xD;create_object STONE {&#xD;    number_of_groups 99999&#xD;    avoid_cliff_zone 4&#xD;}</Example1>
+  </Node>
+
+  <Node Name="min_distance_to_players" Location="OBJECTS_GENERATION\Command" Type="Property" GameVersion="All">
+    <Argument1 Name="Distance">number (default: no limits) If min_distance_to_players exceeds max_distance_to_players, no objects are placed</Argument1>
+    <Description>
+      Minimum distance (in tiles) from the origin of player lands, that the object can be placed.
+    </Description>
+    <AdditionalInfo1>It is not necessary to specify both min_distance_to_players and max_distance_to_players.</AdditionalInfo1>
+    <AdditionalInfo2>Distance is a square, not a circle.</AdditionalInfo2>
+    <AdditionalInfo3>If the objects are grouped, distance refers to the center of the group, not the individual group members.</AdditionalInfo3>
+    <AdditionalInfo4>When used with place_on_specific_land_id, distances refer to that specific land.</AdditionalInfo4>
+    <Bug1>If distances are very constrained (ie. min=max), objects are noticeably biased towards being placed in the west (ie. starting villagers).</Bug1>
+    <Bug2>(DE): When used with set_place_for_every_player or place_on_specific_land_id, minimum distance applies to ALL lands, not just player lands (or the specific ID).</Bug2>
+    <Bug3>(pre-DE): minimum distance ALWAYS applies to ALL lands.</Bug3>
+    <Example1 Description="Place the starting scout at a distance of 7-9 tiles.">&lt;OBJECTS_GENERATION&gt;&#xD;create_object SCOUT {&#xD;    set_place_for_every_player&#xD;    min_distance_to_players 7&#xD;    max_distance_to_players 9&#xD;}</Example1>
+  </Node>
+
+  <Node Name="max_distance_to_players" Location="OBJECTS_GENERATION\Command" Type="Property" GameVersion="All">
+    <Argument1 Name="Distance">number (default: no limits) If min_distance_to_players exceeds max_distance_to_players, no objects are placed</Argument1>
+    <Description>
+      Maximum distance (in tiles) from the origin of player lands, that the object can be placed.
+    </Description>
+    <AdditionalInfo1>It is not necessary to specify both min_distance_to_players and max_distance_to_players.</AdditionalInfo1>
+    <AdditionalInfo2>Distance is a square, not a circle.</AdditionalInfo2>
+    <AdditionalInfo3>If the objects are grouped, distance refers to the center of the group, not the individual group members.</AdditionalInfo3>
+    <AdditionalInfo4>When used with place_on_specific_land_id, distances refer to that specific land.</AdditionalInfo4>
+    <AdditionalInfo5>When used without set_place_for_every_player or place_on_specific_land_id, maximum distance has no effect.</AdditionalInfo5>
+    <Bug1>If distances are very constrained (ie. min=max), objects are noticeably biased towards being placed in the west (ie. starting villagers).</Bug1>
+    <Example1 Description="Place the starting scout at a distance of 7-9 tiles.">&lt;OBJECTS_GENERATION&gt;&#xD;create_object SCOUT {&#xD;    set_place_for_every_player&#xD;    min_distance_to_players 7&#xD;    max_distance_to_players 9&#xD;}</Example1>
+  </Node>
+
+  <Node Name="max_distance_to_other_zones" Location="OBJECTS_GENERATION\Command" Type="Property" GameVersion="All">
+    <Argument1 Name="Distance">number (default: 0)</Argument1>
+    <Description>
+      Minimum (NOT maximum), distance in tiles that objects will stay away from terrains that they are restricted from being placed on.
+    </Description>
+    <AdditionalInfo1>Useful for keeping resources away from coastlines, or deep fish away from beaches.</AdditionalInfo1>
+    <AdditionalInfo2>If the objects are grouped, distance refers to the center of the group, not the individual members.</AdditionalInfo2>
+    <AdditionalInfo3>Does not apply to road terrains, even though resources cannot be placed on them.</AdditionalInfo3>
+    <AdditionalInfo4>Useless for objects without any terrain restrictions.</AdditionalInfo4>
+    <Example1 Description="Place a central lake and then fill the map with gold that avoids being close to water.">&lt;LAND_GENERATION&gt;&#xD;create_land {&#xD;    terrain_type WATER&#xD;    number_of_tiles 500&#xD;    land_position 50 50&#xD;}&#xD;&lt;OBJECTS_GENERATION&gt;&#xD;create_object GOLD {&#xD;    number_of_groups 9000&#xD;    set_gaia_object_only&#xD;    max_distance_to_other_zones 5&#xD;}</Example1>
+  </Node>
+
+  <Node Name="min_distance_group_placement" Location="OBJECTS_GENERATION\Command" Type="Property" GameVersion="All">
+    <Argument1 Name="Distance">number (default: 0)</Argument1>
+    <Description>
+      Minimum distance in tiles that individual objects of the same create_object command, and ALL future objects, must stay away from each object.
+    </Description>
+    <AdditionalInfo1>Best used with small values, to keep different resources from being directly next to each other.</AdditionalInfo1>
+    <AdditionalInfo2>To scatter objects from the same command far away from each other, use temp_min_distance_group_placement</AdditionalInfo2>
+    <AdditionalInfo2>If the objects are grouped, distance applies to whole groups, and refers to the center.</AdditionalInfo2>
+    <Example1 Description="Give each player two sets of forages and make them avoid each other by 4 tiles, and keep all future objects 4 tiles away.">&lt;OBJECTS_GENERATION&gt;&#xD;create_object FORAGE {&#xD;    number_of_objects 7&#xD;    number_of_groups 2&#xD;    set_tight_grouping&#xD;    set_place_for_every_player&#xD;    set_gaia_object_only&#xD;    min_distance_to_players 8&#xD;    max_distance_to_players 10&#xD;    min_distance_group_placement 4&#xD;}</Example1>
+  </Node>
+
+  <Node Name="temp_min_distance_group_placement" Location="OBJECTS_GENERATION\Command" Type="Property" GameVersion="All">
+    <Argument1 Name="Distance">number (default: 0)</Argument1>
+    <Description>
+      Like min_distance_group_placement, but only applies to the current create_object command - future objects are unaffected.
+    </Description>
+    <AdditionalInfo1>Useful for scattering objects, for example neutral resources and relics.</AdditionalInfo1>
+    <AdditionalInfo2>Can be used together with min_distance_group_placement</AdditionalInfo2>
+    <AdditionalInfo3>If the objects are grouped, distance applies to whole groups, and refers to the center.</AdditionalInfo3>
+    <Example1 Description="Scatter neutral gold evenly across the map.">&lt;OBJECTS_GENERATION&gt;&#xD;create_object GOLD {&#xD;    number_of_groups 9320&#xD;    number_of_objects 4&#xD;    set_gaia_object_only&#xD;    set_tight_grouping&#xD;    min_distance_group_placement 4&#xD;    temp_min_distance_group_placement 46&#xD;}</Example1>
+  </Node>
+
+  <Node Name="find_closest" Location="OBJECTS_GENERATION\Command" Type="Property" GameVersion="DE">
+    <ExternalReference1 Link="https://www.forgottenempires.net/age-of-empires-ii-definitive-edition/rms-features">Official DE Documentation</ExternalReference1>
+    <Description>
+      Place the object on the closest free tile to the center of the land, taking into consideration all other constraints (Requires: set_place_for_every_player or place_on_specific_land_id)
+    </Description>
+    <AdditionalInfo1>max_distance_to_players is unnecessary when using find_closest.</AdditionalInfo1>
+    <AdditionalInfo2>IMPORTANT: find_closest uses the circular distance, while all other distance constraints (ie. min_distance_to_players) use a square distance. As a result, using both find_closest and min_distance_to_players (without further constraints) will often place objects at 90° to each other because the corners of the square are further from the center than the edges.
+    </AdditionalInfo2>
+    <Example1 Description="Give each player a fishing ship on the closest free (water) tile.">&lt;OBJECTS_GENERATION&gt;&#xD;create_object FISHING_SHIP {&#xD;    set_place_for_every_player&#xD;    find_closest&#xD;}</Example1>
+  </Node>
+
+  <Node Name="force_placement" Location="OBJECTS_GENERATION\Command" Type="Property" GameVersion="DE">
+    <ExternalReference1 Link="https://www.forgottenempires.net/age-of-empires-ii-definitive-edition/rms-features">Official DE Documentation</ExternalReference1>
+    <Description>
+      Allows multiple objects to be placed on the same tile at once, if necessary.  Normally, objects are placed one per tile, and if the tiles run out, no more objects are placed.  With force_placement active, when tiles run out, the remaining objects are placed on the corners of tiles, and then on top of each other.
+    </Description>
+    <AdditionalInfo1>Only works for objects that can overlap on the same tile (ie. units, but not buildings)</AdditionalInfo1>
+    <AdditionalInfo2>Disabled when using set_loose_grouping</AdditionalInfo2>
+    <Bug1>When objects are constrained, often generates an excess of the number of objects specified. This renders the main purpose of the attribute useless.</Bug1>
+    <Example1 Description="Place 50 (+ a few buggy extra) sheep in the 1-tile surrounding a starting outpost.">&lt;OBJECTS_GENERATION&gt;&#xD;create_object OUTPOST {&#xD;    set_place_for_every_player&#xD;    max_distance_to_players 0&#xD;}&#xD;create_object SHEEP {&#xD;    number_of_objects 50&#xD;    set_place_for_every_player&#xD;    max_distance_to_players 1&#xD;    force_placement&#xD;}</Example1>
+  </Node>
+
+  <Node Name="actor_area" Location="OBJECTS_GENERATION\Command" Type="Property" GameVersion="DE">
+    <ExternalReference1 Link="https://www.forgottenempires.net/age-of-empires-ii-definitive-edition/rms-features">Official DE Documentation</ExternalReference1>
+    <Argument1 Name="Identifier">number (default: 0 - no actor area) </Argument1>
+    <Description>
+      Specifies a numerical identifier which can be referred to in future objects with avoid_actor_area or actor_area_to_place_in
+    </Description>
+    <Example1 Description="Spawn a wolf next to each relic.">&lt;OBJECTS_GENERATION&gt;&#xD;create_object RELIC {&#xD;    number_of_objects 5&#xD;    set_gaia_object_only&#xD;    temp_min_distance_group_placement 35&#xD;    actor_area 1234&#xD;}&#xD;create_object WOLF {&#xD;    number_of_objects 9320&#xD;    set_gaia_object_only&#xD;    actor_area_to_place_in 1234&#xD;    temp_min_distance_group_placement 25&#xD;}</Example1>
+  </Node>
+
+  <Node Name="actor_area_radius" Location="OBJECTS_GENERATION\Command" Type="Property" GameVersion="DE">
+    <ExternalReference1 Link="https://www.forgottenempires.net/age-of-empires-ii-definitive-edition/rms-features">Official DE Documentation</ExternalReference1>
+    <Argument1 Name="Radius">number (default: 1 = 3x3 area)</Argument1>
+    <Description>
+      Used with actor_area to specify how large it should be.
+    </Description>
+    <Example1 Description="Give each player a mill with 7 deer in a 7-tile radius.">&lt;OBJECTS_GENERATION&gt;&#xD;create_object MILL {&#xD;    set_place_for_every_player&#xD;    min_distance_to_players 16&#xD;    max_distance_to_players 20&#xD;    actor_area 61&#xD;    actor_area_radius 7&#xD;}&#xD;create_object DEER {&#xD;    number_of_objects 7&#xD;    set_place_for_every_player&#xD;    set_gaia_object_only&#xD;    actor_area_to_place_in 61&#xD;}</Example1>
+  </Node>
+
+  <Node Name="actor_area_to_place_in" Location="OBJECTS_GENERATION\Command" Type="Property" GameVersion="DE">
+    <ExternalReference1 Link="https://www.forgottenempires.net/age-of-empires-ii-definitive-edition/rms-features">Official DE Documentation</ExternalReference1>
+    <ExternalReference2 Link="https://pastebin.com/bYa6AxLr">Actor Area Guidelines</ExternalReference2>
+    <Argument1 Name="Identifier">number</Argument1>
+    <Description>
+      Place the object only within the radius of the specified actor_area
+    </Description>
+    <AdditionalInfo1>Overrides max_distance_to_players (BUG?)</AdditionalInfo1>
+    <Example1 Description="Place a lumber camp on the nearest forest and place villagers there too.">&lt;OBJECTS_GENERATION&gt;&#xD;create_object LUMBER_CAMP {&#xD;    set_place_for_every_player&#xD;    max_distance_to_players 67&#xD;    place_on_forest_zone&#xD;    find_closest&#xD;    actor_area 8&#xD;    actor_area_radius 4&#xD;}&#xD;create_object VILLAGER {&#xD;    set_place_for_every_player&#xD;    number_of_objects 4&#xD;    actor_area_to_place_in 8&#xD;    place_on_forest_zone&#xD;    find_closest&#xD;}</Example1>
+  </Node>
+
+  <Node Name="avoid_actor_area" Location="OBJECTS_GENERATION\Command" Type="Property" GameVersion="DE">
+    <ExternalReference1 Link="https://www.forgottenempires.net/age-of-empires-ii-definitive-edition/rms-features">Official DE Documentation</ExternalReference1>
+    <ExternalReference2 Link="https://pastebin.com/bYa6AxLr">Actor Area Guidelines</ExternalReference2>
+    <Argument1 Name="argument_1_name">argument_1_description</Argument1>
+    <Description>
+      The object will avoid the specified actor_area
+    </Description>
+    <AdditionalInfo1>The same object can avoid multiple actor areas.</AdditionalInfo1>
+    <Example1 Description="Place a barracks for empire wars and have it avoid various other objects that you already placed.">&lt;OBJECTS_GENERATION&gt;&#xD;create_object BARRACKS {&#xD;    set_place_for_every_player&#xD;    min_distance_to_players 7&#xD;    max_distance_to_players 9&#xD;    avoid_actor_area 94&#xD;    avoid_actor_area 40&#xD;    avoid_actor_area 8&#xD;    avoid_actor_area 9&#xD;    avoid_actor_area 99&#xD;    avoid_actor_area 171&#xD;    actor_area 51&#xD;    actor_area_radius 5&#xD;}</Example1>
+  </Node>
+
+  <Node Name="avoid_all_actor_areas" Location="OBJECTS_GENERATION\Command" Type="Property" GameVersion="DE">
+    <ExternalReference1 Link="https://www.forgottenempires.net/age-of-empires-ii-definitive-edition/rms-features">Official DE Documentation</ExternalReference1>
+    <ExternalReference2 Link="https://pastebin.com/bYa6AxLr">Actor Area Guidelines</ExternalReference2>
+    <Description>
+      The object will avoid being placed within ANY existing actor_area
+    </Description>
+    <Example1 Description="Place wolves that avoid all actor areas.">&lt;OBJECTS_GENERATION&gt;&#xD;create_object TOWN_CENTER {&#xD;    set_place_for_every_player&#xD;    max_distance_to_players 0&#xD;    actor_area 100&#xD;    actor_area_radius 60&#xD;}&#xD;create_object WOLF {&#xD;    number_of_objects 9320&#xD;    temp_min_distance_group_placement 52&#xD;    avoid_actor_area 100&#xD;}</Example1>
+  </Node>
+
+  <!--Miscelanious Section-->
+  <Node Name="Comment" Location="Any" Type="Comment" GameVersion="All">
+    <ExternalReference1 Link="http://aok.heavengames.com/cgi-bin/forums/display.cgi?action=ct&amp;f=26,42304,,365">Parser Pitfalls</ExternalReference1>
+    <Argument1 Name="Content">Anything !</Argument1>
+    <Description>
+      A comment is a piece of text that is ignored by the parser, but provides helpful information to someone looking at the code, such as yourself.
+    </Description>
+    <AdditionalInfo1>Comments can be nested. If you have a comment within a comment, the "sub comment" will not prematurely terminate the main comment, even if syntax highlighters indicate elsewise.</AdditionalInfo1>
+    <AdditionalInfo2>Make sure to always include a separator between the comment character and the comment text. This is a common mistake, and many syntax highlighters will not properly recognize broken comments.</AdditionalInfo2>
+    <AdditionalInfo3>If you are using RMSAssistant, comment are formatted automaticaly, you just have to provide their content.</AdditionalInfo3>
+    <Bug1>(pre-DE): Comments within dead branches (Conditionals and Random Code) are NOT ignored. For more information, see the external article: Parser Pitfalls</Bug1>
+    <Example1 Description="Working comments">/* this is a comment */&#xD;/* this is a&#xD;multi-line comment&#xD;*/&#xD;/* /* this is a nested */ comment */</Example1>
+    <Example2 Description="Broken comments">// this is NOT a comment&#xD;#this is NOT a comment&#xD;/*this is NOT a comment*/&#xD;/*** this is NOT a comment ***/&#xD;/* this comment never ends&#xD;/* this comment never ends*/&#xD;/* this comment never ends */*</Example2>
+  </Node>
+
+  <Node Name="Constant" Location="Any" Type="Constant" GameVersion="All">
+    <ExternalReference1 Link="http://aok.heavengames.com/cgi-bin/forums/display.cgi?action=ct&amp;f=26,42304,,365">Parser Pitfalls</ExternalReference1>
+    <Argument1 Name="Constant">text&#xD;  + AoC/UP - max length is 99 characters&#xD;  + ANY characters are valid; convention is to use uppercase letters and underscores</Argument1>
+    <Argument2 Name="Identifier">number (see: Constant Reference in Global documentation)</Argument2>
+    <Description>
+      Assign a label of your choice to a numeric ID, to be able to use the terrain/object associated with that ID.
+    </Description>
+    <AdditionalInfo1>This is required to use anything that is not predefined.</AdditionalInfo1>
+    <AdditionalInfo2>Items can have multiple constants assigned to them.</AdditionalInfo2>
+    <AdditionalInfo3>You cannot re-define a predefined name to a different ID.</AdditionalInfo3>
+    <AdditionalInfo4>You cannot use #const as a way to define variable numbers. This will NOT work: #const NUM 10 ==&gt; number_of_objects NUM</AdditionalInfo4>
+    <AdditionalInfo5>Constants are interpreted in context (ie. after create_object the game will interpret it as an object, while after create_terrain the game will interpret it as a terrain)</AdditionalInfo5>
+    <AdditionalInfo6>WARNING: Constants without a proper context are interpreted as syntax. For more information, see the external article: Parser Pitfalls</AdditionalInfo6>
+    <Example1 Description="Define mossy road so you can use it later.">#const ROAD_FUNGUS 39</Example1>
+    <Example2 Description="Define and use variable constants depending on the season.">start_random&#xD;    percent_chance 30 #define WINTER&#xD;    percent_chance 30 #define AUTUMN&#xD;end_random&#xD;if WINTER&#xD;    #const LAND_A 32 /* snow */&#xD;    #const BERRY_TYPE 59 /* berry bush */&#xD;elseif AUTUMN&#xD;    #const LAND_A 5 /* leaves */&#xD;    #const BERRY_TYPE 59 /* berry bush */&#xD;else&#xD;    #const LAND_A 3 /* dirt 3 */&#xD;    #const BERRY_TYPE 1059 /* orange bush */&#xD;endif&#xD;&lt;OBJECTS_GENERATION&gt;&#xD;create_object BERRY_TYPE {&#xD;    number_of_objects 5&#xD;    set_place_for_every_player&#xD;    set_gaia_object_only&#xD;    find_closest&#xD;    terrain_to_place_on LAND_A&#xD;}</Example2>
+  </Node>
+
+  <Node Name="Define" Location="Any" Type="Define" GameVersion="All">
+    <Argument1 Name="ConditionLabel">text&#xD;  + AoC/UP - max length is 99 characters&#xD;  + ANY characters are valid; convention is to use uppercase letters and underscores</Argument1>
+    <Description>
+      Define your own condition labels, to refer to at a later point.
+    </Description>
+    <AdditionalInfo1>Do not use any predefined constants.</AdditionalInfo1>
+    <Example1 Description="Set up seasonal variations for the base terrain.">start_random&#xD;    percent_chance 20    #define WINTER&#xD;    percent_chance 20    #define AUTUMN&#xD;end_random&#xD;&lt;LAND_GENERATION&gt;&#xD;if WINTER    base_terrain SNOW&#xD;elseif    AUTUMN    base_terrain LEAVES&#xD;else    base_terrain DIRT3&#xD;endif</Example1>
+  </Node>
+
+  <Node Name="start_random" Location="Any" Type="Random Block" GameVersion="All">
+    <Description>
+      Can be used just about anywhere to add an element of randomness to your script.
+    </Description>
+    <AdditionalInfo1>Add percent_chance commands to define branches with different odds to be picked during generation.</AdditionalInfo1>
+    <AdditionalInfo2>If you are using RMSAssistant, all the syntax of this block will be automaticaly generated, incuding the end_random statement</AdditionalInfo2>
+    <Example1 Description="Place 5 or 6 or 7 gold mines with 6 being the most likely.">&lt;OBJECTS_GENERATION&gt;&#xD;create_object GOLD {&#xD;    start_random&#xD;       percent_chance 30    number_of_objects 5&#xD;       percent_chance 50    number_of_objects 6&#xD;       percent_chance 20    number_of_objects 7&#xD;    end_random&#xD;}</Example1>
+    <Example2 Description="Have a 10% chance of placing a gold mines (and a 90% of not doing so)">&lt;OBJECTS_GENERATION&gt;&#xD;start_random&#xD;percent_chance 10&#xD;    create_object GOLD {&#xD;        number_of_objects 5&#xD;    }&#xD;end_random</Example2>
+  </Node>
+
+  <Node Name="percent_chance" Location="Random Block" Type="Probability weight" GameVersion="All">
+    <ExternalReference1 Link="http://aok.heavengames.com/cgi-bin/forums/display.cgi?action=ct&amp;f=26,42304,,365">Parser Pitfalls</ExternalReference1>
+    <Argument1 Name="%">number (0-100)</Argument1>
+    <Description>
+      Specify a piece of code that has a defined chance of being chosen.
+    </Description>
+    <AdditionalInfo1>If the total percentages add up to less than 100%, there is a chance that none of them get chosen</AdditionalInfo1>
+    <AdditionalInfo2>If the total exceeds 100%, only the first 100% will have a chance of occurring.</AdditionalInfo2>
+    <AdditionalInfo3>Random constructs can encompass individual arguments, or even whole blocks of code.</AdditionalInfo3>
+    <AdditionalInfo4>They cannot be nested. To achieve a non-integer chance, use a first random block to define (using #define) which additional random block to run.</AdditionalInfo4>
+    <Bug1>(AoC/HD/UP): Comments in dead branches are not ignored. Do not include any random syntax (ie. end_random) in such comments. For more information, see the external article: Parser Pitfalls</Bug1>
+    <Example1 Description="Place 5 or 6 or 7 gold mines with 6 being the most likely.">&lt;OBJECTS_GENERATION&gt;&#xD;create_object GOLD {&#xD;    start_random&#xD;       percent_chance 30    number_of_objects 5&#xD;       percent_chance 50    number_of_objects 6&#xD;       percent_chance 20    number_of_objects 7&#xD;    end_random&#xD;}</Example1>
+    <Example2 Description="Have a 10% chance of placing a gold mines (and a 90% of not doing so)">&lt;OBJECTS_GENERATION&gt;&#xD;start_random&#xD;percent_chance 10&#xD;    create_object GOLD {&#xD;        number_of_objects 5&#xD;    }&#xD;end_random</Example2>
+  </Node>
+
+  <Node Name="Condition" Location="Any" Type="Conditional Block" GameVersion="All">
+    <ExternalReference1 Link="http://aok.heavengames.com/cgi-bin/forums/display.cgi?action=ct&amp;f=26,42304,,365">Parser Pitfalls</ExternalReference1>
+    <Description>
+      Conditionals are pieces of code that will be executed based on whether a specified condition is fulfilled.
+    </Description>
+    <AdditionalInfo1>Can be used within commands or around whole blocks of code.</AdditionalInfo1>
+    <AdditionalInfo2>Conditionals can be nested.</AdditionalInfo2>
+    <AdditionalInfo3>If you are using RMSAssistant, all the syntax of this block will be automaticaly generated, including the endif statement, you just have to add conditions</AdditionalInfo3>
+    <Example1 Description="Manually scale relic count to map size.">&lt;OBJECTS_GENERATION&gt;&#xD;create_object RELIC {&#xD;    min_distance_to_players 25&#xD;    if TINY_MAP&#xD;        number_of_objects 5&#xD;        temp_min_distance_group_placement 35&#xD;    elseif SMALL_MAP&#xD;        number_of_objects 5&#xD;        temp_min_distance_group_placement 38&#xD;    elseif MEDIUM_MAP&#xD;        number_of_objects 5&#xD;        temp_min_distance_group_placement 38&#xD;    elseif LARGE_MAP&#xD;        number_of_objects 7&#xD;        temp_min_distance_group_placement 48&#xD;    elseif HUGE_MAP&#xD;        number_of_objects 8&#xD;        temp_min_distance_group_placement 52&#xD;    else&#xD;        number_of_objects 999&#xD;        temp_min_distance_group_placement 52&#xD;    endif&#xD;}</Example1>
+    <Example2 Description="Replace the scout with a king when playing regicide.">&lt;OBJECTS_GENERATION&gt;&#xD;if REGICIDE    create_object KING&#xD;else    create_object SCOUT&#xD;endif&#xD;{&#xD;    set_place_for_every_player&#xD;    min_distance_to_players 7&#xD;    max_distance_to_players 9&#xD;}</Example2>
+    <Example3 Description="Set up a NOT conditional - place a cow when 'infinite resources' is not true.">&lt;OBJECTS_GENERATION&gt;&#xD;if INFINITE_RESOURCES&#xD;else&#xD;    create_object DLC_COW {&#xD;        set_place_for_every_player&#xD;        find_closest&#xD;    }&#xD;endif</Example3>
+  </Node>
+
+  <Node Name="if" Location="Conditional Block" Type="if" GameVersion="All">
+    <ExternalReference1 Link="http://aok.heavengames.com/cgi-bin/forums/display.cgi?action=ct&amp;f=26,42304,,365">Parser Pitfalls</ExternalReference1>
+    <Argument1 Name="ConditionLabel">either a predefined condition or a custom condition</Argument1>
+    <Description>required once (and once only) in any conditional block. It will execute the code if the condition is true, and will stop checking further conditions.</Description>
+    <Bug1>(AoC/HD): Comments in dead branches are not ignored. Do not include any conditional syntax in such comments.  Be especially careful with "if" since it is easy to inadvertently type it in a comment! For more information, see the external article: Parser Pitfalls</Bug1>
+    <Example1 Description="Manually scale relic count to map size.">&lt;OBJECTS_GENERATION&gt;&#xD;create_object RELIC {&#xD;    min_distance_to_players 25&#xD;    if TINY_MAP&#xD;        number_of_objects 5&#xD;        temp_min_distance_group_placement 35&#xD;    elseif SMALL_MAP&#xD;        number_of_objects 5&#xD;        temp_min_distance_group_placement 38&#xD;    elseif MEDIUM_MAP&#xD;        number_of_objects 5&#xD;        temp_min_distance_group_placement 38&#xD;    elseif LARGE_MAP&#xD;        number_of_objects 7&#xD;        temp_min_distance_group_placement 48&#xD;    elseif HUGE_MAP&#xD;        number_of_objects 8&#xD;        temp_min_distance_group_placement 52&#xD;    else&#xD;        number_of_objects 999&#xD;        temp_min_distance_group_placement 52&#xD;    endif&#xD;}</Example1>
+    <Example2 Description="Replace the scout with a king when playing regicide.">&lt;OBJECTS_GENERATION&gt;&#xD;if REGICIDE    create_object KING&#xD;else    create_object SCOUT&#xD;endif&#xD;{&#xD;    set_place_for_every_player&#xD;    min_distance_to_players 7&#xD;    max_distance_to_players 9&#xD;}</Example2>
+    <Example3 Description="Set up a NOT conditional - place a cow when 'infinite resources' is not true.">&lt;OBJECTS_GENERATION&gt;&#xD;if INFINITE_RESOURCES&#xD;else&#xD;    create_object DLC_COW {&#xD;        set_place_for_every_player&#xD;        find_closest&#xD;    }&#xD;endif</Example3>
+  </Node>
+
+  <Node Name="elseif" Location="Conditional Block" Type="elseif" GameVersion="All">
+    <ExternalReference1 Link="http://aok.heavengames.com/cgi-bin/forums/display.cgi?action=ct&amp;f=26,42304,,365">Parser Pitfalls</ExternalReference1>
+    <Argument1 Name="ConditionLabel">either a predefined condition or a custom condition</Argument1>
+    <Description>is optional (and can be specified multiple times). It will be evaluated if the previous condition(s) were not true. If true, no further conditions are checked.</Description>
+    <Bug1>(AoC/HD): Comments in dead branches are not ignored. Do not include any conditional syntax in such comments. Be especially careful with "if" since it is easy to inadvertently type it in a comment! For more information, see the external article: Parser Pitfalls</Bug1>
+    <Example1 Description="Manually scale relic count to map size.">&lt;OBJECTS_GENERATION&gt;&#xD;create_object RELIC {&#xD;    min_distance_to_players 25&#xD;    if TINY_MAP&#xD;        number_of_objects 5&#xD;        temp_min_distance_group_placement 35&#xD;    elseif SMALL_MAP&#xD;        number_of_objects 5&#xD;        temp_min_distance_group_placement 38&#xD;    elseif MEDIUM_MAP&#xD;        number_of_objects 5&#xD;        temp_min_distance_group_placement 38&#xD;    elseif LARGE_MAP&#xD;        number_of_objects 7&#xD;        temp_min_distance_group_placement 48&#xD;    elseif HUGE_MAP&#xD;        number_of_objects 8&#xD;        temp_min_distance_group_placement 52&#xD;    else&#xD;        number_of_objects 999&#xD;        temp_min_distance_group_placement 52&#xD;    endif&#xD;}</Example1>
+    <Example2 Description="Replace the scout with a king when playing regicide.">&lt;OBJECTS_GENERATION&gt;&#xD;if REGICIDE    create_object KING&#xD;else    create_object SCOUT&#xD;endif&#xD;{&#xD;    set_place_for_every_player&#xD;    min_distance_to_players 7&#xD;    max_distance_to_players 9&#xD;}</Example2>
+    <Example3 Description="Set up a NOT conditional - place a cow when 'infinite resources' is not true.">&lt;OBJECTS_GENERATION&gt;&#xD;if INFINITE_RESOURCES&#xD;else&#xD;    create_object DLC_COW {&#xD;        set_place_for_every_player&#xD;        find_closest&#xD;    }&#xD;endif</Example3>
+  </Node>
+
+  <Node Name="else" Location="Conditional Block" Type="else" GameVersion="All">
+    <ExternalReference1 Link="http://aok.heavengames.com/cgi-bin/forums/display.cgi?action=ct&amp;f=26,42304,,365">Parser Pitfalls</ExternalReference1>
+    <Description>is optional and will be executed if all other conditions fail.</Description>
+    <Bug1>(AoC/HD): Comments in dead branches are not ignored. Do not include any conditional syntax in such comments. Be especially careful with "if" since it is easy to inadvertently type it in a comment! For more information, see the external article: Parser Pitfalls</Bug1>
+    <Example1 Description="Manually scale relic count to map size.">&lt;OBJECTS_GENERATION&gt;&#xD;create_object RELIC {&#xD;    min_distance_to_players 25&#xD;    if TINY_MAP&#xD;        number_of_objects 5&#xD;        temp_min_distance_group_placement 35&#xD;    elseif SMALL_MAP&#xD;        number_of_objects 5&#xD;        temp_min_distance_group_placement 38&#xD;    elseif MEDIUM_MAP&#xD;        number_of_objects 5&#xD;        temp_min_distance_group_placement 38&#xD;    elseif LARGE_MAP&#xD;        number_of_objects 7&#xD;        temp_min_distance_group_placement 48&#xD;    elseif HUGE_MAP&#xD;        number_of_objects 8&#xD;        temp_min_distance_group_placement 52&#xD;    else&#xD;        number_of_objects 999&#xD;        temp_min_distance_group_placement 52&#xD;    endif&#xD;}</Example1>
+    <Example2 Description="Replace the scout with a king when playing regicide.">&lt;OBJECTS_GENERATION&gt;&#xD;if REGICIDE    create_object KING&#xD;else    create_object SCOUT&#xD;endif&#xD;{&#xD;    set_place_for_every_player&#xD;    min_distance_to_players 7&#xD;    max_distance_to_players 9&#xD;}</Example2>
+    <Example3 Description="Set up a NOT conditional - place a cow when 'infinite resources' is not true.">&lt;OBJECTS_GENERATION&gt;&#xD;if INFINITE_RESOURCES&#xD;else&#xD;    create_object DLC_COW {&#xD;        set_place_for_every_player&#xD;        find_closest&#xD;    }&#xD;endif</Example3>
   </Node>
   
   <!--blueprint for a node, elements with a number at the end can be used as many time as you want as long as you increment the number each time, or can not be used at all if not needed (only the node's attributes and the "Description" element are mandatory")-->

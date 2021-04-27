@@ -174,7 +174,7 @@ namespace RMS_Assistant
             }
         }
 
-    public void SetUpInterface()
+        public void SetUpInterface()
         {
             Interface = new NodeInterface(this);
 
@@ -303,6 +303,22 @@ namespace RMS_Assistant
         public abstract void Print(StreamWriter file, uint indentLevel);
         public abstract RMSNode GetRelevantParent(RMSNode caller);
         public abstract RMSNode Clone();
+
+        public bool isInRandomBlock()
+        {
+            bool isRandomized = false;
+            RMSNode node = this;
+            while (node != null)
+            {
+                if (node is RMSRandom)
+                {
+                    isRandomized = true;
+                    break;
+                }
+                node = node.Parent;
+            }
+            return isRandomized;
+        }
 
     }
 

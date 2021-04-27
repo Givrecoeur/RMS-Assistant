@@ -35,7 +35,10 @@ namespace RMS_Assistant
             {
                 IEnumerable<XElement> docEntries =
                     from entry in XMLTree.Descendants("Node")
-                    where ((string)entry.Attribute("Name").Value == nodeName && entry.Attribute("Location").Value.Contains(sectionName))
+                    where ((string)entry.Attribute("Name").Value == nodeName && (entry.Attribute("Location").Value.Contains(sectionName) 
+                                                                              || entry.Attribute("Location").Value == "Any"
+                                                                              || entry.Attribute("Location").Value == "Random Block"
+                                                                              || entry.Attribute("Location").Value == "Conditional Block"))
                     select entry;
 
                 if (docEntries.Any())

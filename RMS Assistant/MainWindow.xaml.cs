@@ -323,7 +323,12 @@ namespace RMS_Assistant
                 CopyButton.IsEnabled = true;
                 NewCommentButton.IsEnabled = true;
                 DeleteButton.IsEnabled = true;
-            }     
+            }
+            if (newNode.isInRandomBlock())
+            {
+                RandomizeButton.IsEnabled = false;
+                NewRandomButton.IsEnabled = false;
+            }
         }
 
         public void UpdatePanels(RMSNode newNode)

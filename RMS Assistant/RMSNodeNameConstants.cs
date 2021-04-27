@@ -229,7 +229,7 @@ namespace RMS_Assistant
             { "actor_area_radius",                 1 },
             { "actor_area_to_place_in",            1 },
             { "avoid_actor_area",                  1 },
-            { "avoid_all_actor_area",              1 },
+            { "avoid_all_actor_areas",             1 },
             { "set_tight_grouping",                0 },
             { "set_loose_grouping",                0 },
             { "force_placement",                   0 },
